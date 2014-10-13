@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.bitseal.pow.POWProcessor;
+import org.bitseal.pow.POWProcessorVersion3;
 
 import android.util.Log;
 
 /**
- * Runs time trials for Bitmessage POW in Bitseal. 
+ * Runs time trials for Bitmessage POW in Bitseal, using the
+ * POW formula from Protocol Version 3. 
  * 
  * @author Jonathan Coe
  *
@@ -20,8 +21,12 @@ public class Test_POWTimeTrials extends TestCase
 	private static final int TRIALS_TO_RUN = 1;
 	
 	private static final int PAYLOAD_LENGTH = 800;
+	private static final long TIME_TO_LIVE = 60;
 	
-	private static final String TAG = "POW_TIME_TRIALS";
+	private static final long NONCE_TRIALS_PER_BYTE = 1000;
+	private static final long EXTRA_BYTES = 1000;
+	
+	private static final String TAG = "POW_TIME_TRIALS_VERSION_3";
 	
 	protected void setUp() throws Exception
 	{
@@ -37,7 +42,7 @@ public class Test_POWTimeTrials extends TestCase
 	{
 		byte[] payload = new byte[PAYLOAD_LENGTH];
 		new SecureRandom().nextBytes(payload);
-		POWProcessor powProc = new POWProcessor();
+		POWProcessorVersion3 powProc = new POWProcessorVersion3();
 		ArrayList<Long> times = new ArrayList<Long>();
 		
 		for (int i = 0; i < TRIALS_TO_RUN; i++)
@@ -49,12 +54,12 @@ public class Test_POWTimeTrials extends TestCase
 			//----------------------------------BEGIN TIMED TEST----------------------------------------------
  			startTime = System.nanoTime();
 			
-			long powNonce = powProc.doPOW(payload, POWProcessor.NETWORK_NONCE_TRIALS_PER_BYTE, POWProcessor.NETWORK_EXTRA_BYTES);
+			long powNonce = powProc.doPOW(payload, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES, TIME_TO_LIVE);
 			
  			endTime = System.nanoTime();
  			//----------------------------------END TIMED TEST----------------------------------------------
  			
- 			assertTrue(powProc.checkPOW(payload, powNonce, POWProcessor.NETWORK_NONCE_TRIALS_PER_BYTE, POWProcessor.NETWORK_EXTRA_BYTES));
+ 			assertTrue(powProc.checkPOW(payload, powNonce, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES, TIME_TO_LIVE));
  			timeTaken = endTime - startTime;
  			long timeTakenInSeconds = timeTaken / 1000000000; // Convert from nanoseconds to seconds
  			Log.i(TAG, "Time taken in seconds:          " + timeTakenInSeconds);
