@@ -66,7 +66,7 @@ public class Test_ColourCalculator extends TestCase
 		int originalB = originalValues[2];
 		
 		for (int i = 0; i < NUMBER_OF_TEST_RUNS; i++)
-		{	
+		{
 			try
 			{
 				int[] values = ColourCalculator.calculateColoursFromAddress(address.getAddress());
