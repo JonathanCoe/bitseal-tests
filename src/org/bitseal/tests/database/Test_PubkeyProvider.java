@@ -103,48 +103,45 @@ public class Test_PubkeyProvider extends AndroidTestCase
 		Pubkey record0 = new Pubkey();
 		record0.setBelongsToMe(true);
 		record0.setRipeHash(ripeHash0);
-		record0.setTime(currentTime);
 		record0.setPOWNonce(nonce0);
-		record0.setTime(System.currentTimeMillis() / 1000);
-		record0.setAddressVersion(3);
+		record0.setExpirationTime(currentTime);
+		record0.setObjectVersion(3);
 		record0.setStreamNumber(1);
 		record0.setBehaviourBitfield(3);
 		record0.setPublicSigningKey(publicSigningKey0);
 		record0.setPublicEncryptionKey(publicEncryptionKey0);
-		record0.setNonceTrialsPerByte(320);
-		record0.setExtraBytes(14000);
+		record0.setNonceTrialsPerByte(1000);
+		record0.setExtraBytes(1000);
 		record0.setSignatureLength(signatureLength0);
 		record0.setSignature(signature0);
 			
 		Pubkey record1 = new Pubkey();
 		record1.setBelongsToMe(true);
 		record1.setRipeHash(ripeHash1);
-		record1.setTime(currentTime + 600);
 		record1.setPOWNonce(nonce1);
-		record1.setTime(System.currentTimeMillis() / 1000);
-		record1.setAddressVersion(3);
+		record1.setExpirationTime(currentTime + 600);
+		record1.setObjectVersion(4);
 		record1.setStreamNumber(1);
 		record1.setBehaviourBitfield(3);
 		record1.setPublicSigningKey(publicSigningKey1);
 		record1.setPublicEncryptionKey(publicEncryptionKey1);
-		record1.setNonceTrialsPerByte(320);
-		record1.setExtraBytes(14000);
+		record1.setNonceTrialsPerByte(1000);
+		record1.setExtraBytes(1000);
 		record1.setSignatureLength(signatureLength1);
 		record1.setSignature(signature1);
 		
 		Pubkey record2 = new Pubkey(); // Deliberate duplicate for testing - see below
 		record2.setBelongsToMe(true);
 		record2.setRipeHash(ripeHash1);
-		record2.setTime(currentTime + 600);
 		record2.setPOWNonce(nonce1);
-		record2.setTime(System.currentTimeMillis() / 1000);
-		record2.setAddressVersion(3);
+		record2.setExpirationTime(currentTime + 600);
+		record2.setObjectVersion(4);
 		record2.setStreamNumber(1);
 		record2.setBehaviourBitfield(3);
 		record2.setPublicSigningKey(publicSigningKey1);
 		record2.setPublicEncryptionKey(publicEncryptionKey1);
-		record2.setNonceTrialsPerByte(320);
-		record2.setExtraBytes(14000);
+		record2.setNonceTrialsPerByte(1000);
+		record2.setExtraBytes(1000);
 		record2.setSignatureLength(signatureLength1);
 		record2.setSignature(signature1);
 		
@@ -153,8 +150,7 @@ public class Test_PubkeyProvider extends AndroidTestCase
 		provider.addPubkey(record2);
 		
 		// Test searching for records:
-		ArrayList<Pubkey> searchResults0 = 
-				provider.searchPubkeys(PubkeysTable.COLUMN_PUBLIC_SIGNING_KEY, publicSigningKey1String);
+		ArrayList<Pubkey> searchResults0 = provider.searchPubkeys(PubkeysTable.COLUMN_PUBLIC_SIGNING_KEY, publicSigningKey1String);
 		Pubkey result0 = searchResults0.get(0);
 		int recordsRetrieved = searchResults0.size();
 		

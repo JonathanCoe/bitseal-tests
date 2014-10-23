@@ -13,6 +13,9 @@ import org.bitseal.pow.POWProcessor;
  */
 public class Test_CalculateAndVerifyPOW extends TestCase
 {
+	// The 'time to live' value to use in this test (in seconds)
+	private static final long TIME_TO_LIVE = 3600;
+	
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -29,7 +32,7 @@ public class Test_CalculateAndVerifyPOW extends TestCase
 		new SecureRandom().nextBytes(mockPayload);
 		
 		POWProcessor powProc = new POWProcessor();
-		long powNonce = powProc.doPOW(mockPayload, POWProcessor.NETWORK_NONCE_TRIALS_PER_BYTE, POWProcessor.NETWORK_EXTRA_BYTES);
+		long powNonce = powProc.doPOW(mockPayload, POWProcessor.NETWORK_NONCE_TRIALS_PER_BYTE, POWProcessor.NETWORK_EXTRA_BYTES, TIME_TO_LIVE);
 		
 		assertTrue(powProc.checkPOW(mockPayload, powNonce, POWProcessor.NETWORK_NONCE_TRIALS_PER_BYTE, POWProcessor.NETWORK_EXTRA_BYTES));
 	}

@@ -107,9 +107,10 @@ public class Test_ConstructPubkeyPayload extends AndroidTestCase
 		long time = System.currentTimeMillis() / 1000; // Gets the current time in seconds
     	long maxTime = time + 300; // 300 seconds equals 5 minutes
     	long minTime = time - 300;
-		Log.i(TAG, "Reconstructed Pubkey time:                    " + reconstructedPubkey.getTime());
-		assertTrue(reconstructedPubkey.getTime() < maxTime);
-		assertTrue(reconstructedPubkey.getTime() > minTime);
+    	long pubkeyExpirationTime = reconstructedPubkey.getExpirationTime();
+		Log.i(TAG, "Reconstructed Pubkey time:                    " + pubkeyExpirationTime);
+		assertTrue(pubkeyExpirationTime < maxTime);
+		assertTrue(pubkeyExpirationTime > minTime);
 		
 		// Now check that the reconstructed pubkey is valid for the address we started with
 		assertTrue(pubProc.validatePubkey(reconstructedPubkey, address.getAddress()));

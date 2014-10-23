@@ -71,6 +71,8 @@ public class Test_QueueRecordProvider extends AndroidTestCase
 		// Test adding records:
 		QueueRecord record0 = new QueueRecord();	
 		record0.setTask("DisseminatePubkey");
+		record0.setTriggerTime(0);
+		record0.setRecordCount(0);
 		record0.setLastAttemptTime(System.currentTimeMillis() / 1000);
 		record0.setAttempts(5);
 		record0.setObject0Id(435);
@@ -78,6 +80,8 @@ public class Test_QueueRecordProvider extends AndroidTestCase
 
 		QueueRecord record1 = new QueueRecord();
 		record1.setTask("SendMsg");
+		record1.setTriggerTime((System.currentTimeMillis() / 1000) + 3600);
+		record1.setRecordCount(5);
 		record1.setLastAttemptTime(System.currentTimeMillis() / 1000);
 		record1.setAttempts(1);
 		record1.setObject0Id(2821);
@@ -86,6 +90,8 @@ public class Test_QueueRecordProvider extends AndroidTestCase
 		
 		QueueRecord record2 = new QueueRecord(); // Deliberate duplicate for testing - see below
 		record2.setTask("SendMsg");
+		record2.setTriggerTime((System.currentTimeMillis() / 1000) + 3600);
+		record2.setRecordCount(5);
 		record2.setLastAttemptTime(System.currentTimeMillis() / 1000);
 		record2.setAttempts(1);
 		record2.setObject0Id(2821);

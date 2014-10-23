@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.bitseal.pow.POWProcessorVersion3;
+import org.bitseal.pow.POWProcessor;
 
 import android.util.Log;
 
@@ -42,7 +42,7 @@ public class Test_POWTimeTrials extends TestCase
 	{
 		byte[] payload = new byte[PAYLOAD_LENGTH];
 		new SecureRandom().nextBytes(payload);
-		POWProcessorVersion3 powProc = new POWProcessorVersion3();
+		POWProcessor powProc = new POWProcessor();
 		ArrayList<Long> times = new ArrayList<Long>();
 		
 		for (int i = 0; i < TRIALS_TO_RUN; i++)
@@ -59,7 +59,7 @@ public class Test_POWTimeTrials extends TestCase
  			endTime = System.nanoTime();
  			//----------------------------------END TIMED TEST----------------------------------------------
  			
- 			assertTrue(powProc.checkPOW(payload, powNonce, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES, TIME_TO_LIVE));
+ 			assertTrue(powProc.checkPOW(payload, powNonce, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES));
  			timeTaken = endTime - startTime;
  			long timeTakenInSeconds = timeTaken / 1000000000; // Convert from nanoseconds to seconds
  			Log.i(TAG, "Time taken in seconds:          " + timeTakenInSeconds);

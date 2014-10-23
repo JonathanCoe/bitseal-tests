@@ -21,6 +21,9 @@ import android.util.Log;
  */
 public class Test_SignatureSpecific extends TestCase
 {
+	/** The object type number for pubkeys, as defined by the Bitmessage protocol */
+	private static final int OBJECT_TYPE_PUBKEY = 1;
+	
 	private static final String TAG = "TEST_SIGNATURE_SPECIFIC";
 	
 	protected void setUp() throws Exception
@@ -35,21 +38,22 @@ public class Test_SignatureSpecific extends TestCase
 	
 	public void testSignatureSpecific()
 	{
-		// 		Starting data:
-		// Address that this starting data derives from: BM-2cXdemXcNztvNhoGTau7Zpq1nf7odwUaKr
+		// Address that this starting data derives from: BM-2cW7h5aUmvJC9WApzfWsXDcMCSqjPYWbLG
 		
-		String inputPrivateSigningKey = "5HzorSc8AJRNAbtg9WBfvxregwJunP6puBU9dQZvhZYY6zmRCmv";
-		long inputTime = 1398890511;
+		// Starting data:
+		String inputPrivateSigningKey = "5JNWmdv1jovwpeMer3sYX6mtJ1S4WeFqDkvLBW24RQbko966WZr";
+		long inputTime = 1416396813;
 		int inputAddressVersion = 4;
 		int inputStreamNumber = 1;
 		int inputBehaviourBitfield = 1;
-		String inputPublicSigningKeyHex = "853b3e742b41f1c3c1c0ea6cfc230da982adc5c3e6a07e3ef30bdb1f4d2101e6df904a286aae9a482493d671c353584ebec8a95f1cd3bc0e6620633af2227c2d";
-		String inputPublicEncryptionKeyHex = "e4fc38aac159547f26fb0ea78ea65e97764ea0f2f8957aa5edb83f54957ad0c48adba6b33fe32376875c0701f769307978c37e76bc1efc920c7bdc4c110904db";
-		int inputNonceTrialsPerByte = 640;
-		int inputExtraBytes = 14000;
+		String inputPublicSigningKeyHex = "3f957a60845d1288bc1c06b10e8b1bd1425d4beb6ff612bd4521870d43c2e568462f77a004f5d33a8d9a4e0de5500f855b3a9ecf9ac5f418bc6d5ab25d8bb072";
+		String inputPublicEncryptionKeyHex = "11475ba16bd378e7f1d4bbb37ed3afb7d5ac8a21737705e469636cb587b2859f30300d1b9f4f0d25373a87d0bfb072d81f81ca6e0a92a6b348789ada3aa64d3e";
+		String inputRipeHash = "a5589e1196c5c1d9cd502272e8cc3b3c9de26a";
+		int inputNonceTrialsPerByte = 1000;
+		int inputExtraBytes = 1000;
 		
-		// Expected resulting signature
-		String pybitmessageSignatureHex = "3046022100d84bb537198c3727f135a475bfa0aadf77aaa608cee2a6fdabda0042cfb1a2da02210091145a3a5ca984bbca5264045d77c4ad608525378fab271a9e381522c5181517";
+		// PyBitmessage signature
+		String pybitmessageSignatureHex = "304502203660cdca5470961956a8f273fab809399834a95bc2dfae4c414de8f75f1d7972022100dc6642727b9bbd75d83ae3f6812bb55981076a5ccf858051e989ce7bacb52762";
 		
 		// First convert the public signing key, public encryption key, and PyBitmessage signature from hex to byte[] form
 		byte[] publicSigningKey = ByteFormatter.hexStringToByteArray(inputPublicSigningKeyHex);
@@ -58,9 +62,12 @@ public class Test_SignatureSpecific extends TestCase
 		
 		// Create a Pubkey object which we will sign.
 		Pubkey pubkey = new Pubkey();
-		pubkey.setTime(inputTime);
-		pubkey.setAddressVersion(inputAddressVersion);
+		pubkey.setBelongsToMe(true);
+		pubkey.setExpirationTime(inputTime);
+		pubkey.setObjectType(OBJECT_TYPE_PUBKEY);
+		pubkey.setObjectVersion(inputAddressVersion);
 		pubkey.setStreamNumber(inputStreamNumber);
+		pubkey.setRipeHash(ByteFormatter.hexStringToByteArray(inputRipeHash));
 		pubkey.setBehaviourBitfield(inputBehaviourBitfield);
 		pubkey.setPublicSigningKey(publicSigningKey);
 		pubkey.setPublicEncryptionKey(publicEncryptionKey);
@@ -70,9 +77,9 @@ public class Test_SignatureSpecific extends TestCase
 		// Sign the Pubkey we just created.
 		SigProcessor sigProc = new SigProcessor();
 		byte[] signaturePayload = sigProc.createPubkeySignaturePayload(pubkey);
-		byte[] bitcloakSignature = sigProc.signWithWIFKey(signaturePayload, inputPrivateSigningKey);
-		String signatureHex = ByteFormatter.byteArrayToHexString(bitcloakSignature);
-		Log.i(TAG, "Signature produced by Bitcloak: \n" + signatureHex);
+		byte[] bitsealSignature = sigProc.signWithWIFKey(signaturePayload, inputPrivateSigningKey);
+		String signatureHex = ByteFormatter.byteArrayToHexString(bitsealSignature);
+		Log.i(TAG, "Signature produced by Bitseal: \n" + signatureHex);
 		Log.i(TAG, "Signature produced by PyBitmessage: \n" + pybitmessageSignatureHex);
 		
 		// Reconstruct the public signing key so that we can use it to verify the signatures.
@@ -80,13 +87,22 @@ public class Test_SignatureSpecific extends TestCase
 		ECPublicKey ecPublicSigningKey = keyConv.reconstructPublicKey(publicSigningKey);
 		
 		// Check that both signatures are valid. 
-		boolean bitcloakSignatureValid = (sigProc.verifySignature(signaturePayload, bitcloakSignature, ecPublicSigningKey));
+		boolean bitsealSignatureValid = (sigProc.verifySignature(signaturePayload, bitsealSignature, ecPublicSigningKey));
 		boolean pybitmessageSignatureValid = (sigProc.verifySignature(signaturePayload, pybitmessageSignature, ecPublicSigningKey));
 		
-		if (bitcloakSignatureValid && pybitmessageSignatureValid)
+		if (bitsealSignatureValid && pybitmessageSignatureValid)
 		{
 			Log.i(TAG, "Both signatures are valid.");
 		}
-		assertTrue(bitcloakSignatureValid && pybitmessageSignatureValid);
+		if (bitsealSignatureValid == false)
+		{
+			Log.e(TAG, "Bitseal's signature is invalid");
+		}
+		if (pybitmessageSignatureValid == false)
+		{
+			Log.e(TAG, "PyBitmessage's signature is invalid");
+		}
+			
+		assertTrue(bitsealSignatureValid && pybitmessageSignatureValid);
 	}
 }

@@ -18,6 +18,7 @@ import org.bitseal.tests.crypt.Test_EncryptPubkeySpecific;
 import org.bitseal.tests.crypt.Test_EncryptionBasic;
 import org.bitseal.tests.crypt.Test_EncryptionSpecific;
 import org.bitseal.tests.crypt.Test_GenerateAddress;
+import org.bitseal.tests.crypt.Test_RecreateAddressString;
 import org.bitseal.tests.crypt.Test_SignatureBasic;
 import org.bitseal.tests.crypt.Test_SignatureSpecific;
 import org.bitseal.tests.database.Test_AddressBookRecordProvider;
@@ -28,6 +29,7 @@ import org.bitseal.tests.database.Test_PubkeyProvider;
 import org.bitseal.tests.database.Test_QueueRecordProvider;
 import org.bitseal.tests.database.Test_ServerRecordProvider;
 import org.bitseal.tests.services.Test_SortQueueRecords;
+import org.bitseal.tests.util.Test_ByteUtils;
 import org.bitseal.tests.util.Test_ColourCalculator;
 import org.bitseal.tests.util.Test_RemoveBytesFromArray;
 import org.bitseal.tests.util.Test_TimeUtils;
@@ -66,6 +68,7 @@ public class Test_RunQuickTests
 		suite.addTestSuite(Test_EncryptionSpecific.class);
 		suite.addTestSuite(Test_EncryptPubkeySpecific.class);
 		suite.addTestSuite(Test_GenerateAddress.class);
+		suite.addTestSuite(Test_RecreateAddressString.class);
 		suite.addTestSuite(Test_SignatureBasic.class);
 		suite.addTestSuite(Test_SignatureSpecific.class);
 		
@@ -82,6 +85,7 @@ public class Test_RunQuickTests
 		suite.addTestSuite(Test_SortQueueRecords.class);
 		
 		// Tests from "util" package
+		suite.addTestSuite(Test_ByteUtils.class);
 		suite.addTestSuite(Test_ColourCalculator.class);
 		suite.addTestSuite(Test_RemoveBytesFromArray.class);
 		suite.addTestSuite(Test_TimeUtils.class);

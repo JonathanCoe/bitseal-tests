@@ -28,6 +28,8 @@ import android.util.Log;
 **/
 public class Test_ConstructMsgPayload extends TestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TEST_SUBJECT = "I like cake, and it is imperative that you do too.";
 	private static final String TEST_BODY = "I saw you, flouncing around with your Zizek tote bag";
 	
@@ -65,7 +67,7 @@ public class Test_ConstructMsgPayload extends TestCase
 		
 		// Generate the encrypted msg payload
 		OutgoingMessageProcessor outProc = new OutgoingMessageProcessor();
-		Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true);
+		Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		msgPayload.setRelatedAddressId(toAddress.getId());
 		byte[] payloadBytes = msgPayload.getPayload();
 		String payloadHex = ByteFormatter.byteArrayToHexString(payloadBytes);

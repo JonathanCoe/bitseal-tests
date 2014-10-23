@@ -36,6 +36,8 @@ import android.util.Log;
 **/
 public class Test_ExtractMessageFromUnencryptedMsg extends AndroidTestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_EXTRACT_MESSAGE_FROM_UNENCRYPTED_MSG";
 	
 	protected void setUp() throws Exception
@@ -92,9 +94,9 @@ public class Test_ExtractMessageFromUnencryptedMsg extends AndroidTestCase
 		
 		// Use reflection to test the private method constructUnencryptedMsg()
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();		
-		Method method = OutgoingMessageProcessor.class.getDeclaredMethod("constructUnencryptedMsg", Message.class, Pubkey.class, boolean.class);
+		Method method = OutgoingMessageProcessor.class.getDeclaredMethod("constructUnencryptedMsg", Message.class, Pubkey.class, boolean.class, long.class);
 		method.setAccessible(true);
-		UnencryptedMsg unencMsg = (UnencryptedMsg) method.invoke(outMsgProc, message, toPubkey, false);
+		UnencryptedMsg unencMsg = (UnencryptedMsg) method.invoke(outMsgProc, message, toPubkey, false, TEST_MSG_TIME_TO_LIVE);
 
 		// Use reflection to test the private method extractMessageFromUnencryptedMsg()
 		IncomingMessageProcessor inMsgProc = new IncomingMessageProcessor();		

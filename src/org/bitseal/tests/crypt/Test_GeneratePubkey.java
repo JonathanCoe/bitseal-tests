@@ -55,8 +55,8 @@ public class Test_GeneratePubkey extends TestCase
 		long time = System.currentTimeMillis() / 1000; // Gets the current time in seconds
     	long maxTime = time + 480; // 480 seconds equals 8 minutes
     	long minTime = time - 480;	
-		Log.i(TAG, "Generated Pubkey 'time':                    " + pubkey.getTime());
-		assertTrue(pubkey.getTime() < maxTime && pubkey.getTime() > minTime);
+		Log.i(TAG, "Generated Pubkey 'time':                    " + pubkey.getExpirationTime());
+		assertTrue(pubkey.getExpirationTime() < maxTime && pubkey.getExpirationTime() > minTime);
 		
 		// Test check 4: Check the pubkey's "signatureLength" value is equal to the value of its signature		
 		Log.i(TAG, "Generated Pubkey 'signatureLength':         " + pubkey.getSignatureLength());
@@ -64,7 +64,7 @@ public class Test_GeneratePubkey extends TestCase
 		
 		// Test check 5: Use the pubkey's "addressVersion", "streamNumber", "publicSigningKey", and "publicEncryptionKey" values to recalculate the address String
 		// of the address that it was based on and check if the two match
-		String recreatedAddressString = addGen.recreateAddressString(pubkey.getAddressVersion(), pubkey.getStreamNumber(), pubkey.getPublicSigningKey(), pubkey.getPublicEncryptionKey());
+		String recreatedAddressString = addGen.recreateAddressString(pubkey.getObjectVersion(), pubkey.getStreamNumber(), pubkey.getPublicSigningKey(), pubkey.getPublicEncryptionKey());
 		Log.i(TAG, "Original Address String:                    " + address.getAddress());
 		Log.i(TAG, "Recreated Address String:                   " + recreatedAddressString);
 		assertEquals(address.getAddress(), recreatedAddressString);
