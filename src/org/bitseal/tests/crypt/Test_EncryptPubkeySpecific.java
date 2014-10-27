@@ -38,6 +38,8 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
 	/** The object type number for pubkeys, as defined by the Bitmessage protocol */
 	private static final int OBJECT_TYPE_PUBKEY = 1;
 	
+	private static final int PUBKEY_VERSION = 4;
+	
 	private static final String TAG = "TEST_ENCRYPT_PUBKEY_SPECIFIC";
 	
 	protected void setUp() throws Exception
@@ -120,7 +122,7 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
 		bitsealPubkey.setPOWNonce(Long.valueOf(powNonce));
 		bitsealPubkey.setExpirationTime(Long.valueOf(time));
 		bitsealPubkey.setObjectType(OBJECT_TYPE_PUBKEY);
-		bitsealPubkey.setObjectVersion(4);
+		bitsealPubkey.setObjectVersion(PUBKEY_VERSION);
 		bitsealPubkey.setStreamNumber(1);
 		bitsealPubkey.setCorrespondingAddressId(testAddressId);
 		bitsealPubkey.setRipeHash(testAddress.getRipeHash());

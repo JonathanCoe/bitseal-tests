@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.bitseal.crypt.CryptProcessor;
 import org.bitseal.crypt.KeyConverter;
 import org.bitseal.data.Address;
-import org.bitseal.data.Msg;
+import org.bitseal.data.Object;
 import org.bitseal.util.ByteFormatter;
 import org.bitseal.util.ByteUtils;
 import org.spongycastle.jce.interfaces.ECPrivateKey;
@@ -106,8 +106,8 @@ public class Test_DecryptionSpecific extends TestCase
 		toAddress.setPrivateEncryptionKey(new KeyConverter().encodePrivateKeyToWIF(privateKeykBytes));
 		
 		// Use the example data to construct a new EncryptedMsg object
-		Msg encMsg = new Msg();
-		encMsg.setMessageData(encryptedMsgData);
+		Object encMsg = new Object();
+		encMsg.setPayload(encryptedMsgData);
 		
 		// Create the ECPrivateKey object that we will use to decrypt the message data
 		KeyConverter keyConv = new KeyConverter();
@@ -115,7 +115,7 @@ public class Test_DecryptionSpecific extends TestCase
 		
 		// Decrypt the EncryptedMsg
 		CryptProcessor cryptProc = new CryptProcessor();
-		byte[] decryptedBytes = cryptProc.decrypt(encMsg.getMessageData(), k);
+		byte[] decryptedBytes = cryptProc.decrypt(encMsg.getPayload(), k);
 		
 		// Compare the decrypted plain text with the expected plain text
 		String decryptedPlainText = ByteFormatter.byteArrayToHexString(decryptedBytes);

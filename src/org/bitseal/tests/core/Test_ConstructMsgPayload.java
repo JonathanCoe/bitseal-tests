@@ -13,11 +13,7 @@ import org.bitseal.data.Payload;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
 import org.bitseal.database.PubkeyProvider;
-import org.bitseal.pow.POWProcessor;
-import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.ByteFormatter;
-import org.bitseal.util.ByteUtils;
-import org.bitseal.util.VarintEncoder;
 
 import android.util.Log;
 
@@ -73,42 +69,6 @@ public class Test_ConstructMsgPayload extends TestCase
 		String payloadHex = ByteFormatter.byteArrayToHexString(payloadBytes);
 		Log.i(TAG, "Msg payload:                " + payloadHex);
 		
-		// Extract the pow nonce, time, stream number, and encrypted data from the payload
-		byte[] powNonceBytes = ArrayCopier.copyOfRange(payloadBytes, 0, 8);
-		byte[] timeBytes = ArrayCopier.copyOfRange(payloadBytes, 8, 16);
-		byte[] streamNumberBytes = ArrayCopier.copyOfRange(payloadBytes, 16, 17);
-		byte[] encryptedDataBytes = ArrayCopier.copyOfRange(payloadBytes, 17, payloadBytes.length);
-		
-		// Log the hex values of those byte arrays
-		String powNonceHex = ByteFormatter.byteArrayToHexString(powNonceBytes);
-		String timeHex = ByteFormatter.byteArrayToHexString(timeBytes);
-		String streamNumberHex = ByteFormatter.byteArrayToHexString(streamNumberBytes);
-		String encryptedDataHex = ByteFormatter.byteArrayToHexString(encryptedDataBytes);
-		Log.i(TAG, "Msg payload POW nonce:      " + powNonceHex);
-		Log.i(TAG, "Msg payload time:           " + timeHex);
-		Log.i(TAG, "Msg payload stream number:  " + streamNumberHex);
-		Log.i(TAG, "Msg payload encrypted data: " + encryptedDataHex);
-		
-		// Check the pow nonce
-		long powNonce = ByteUtils.bytesToLong(powNonceBytes);
-		POWProcessor powProc = new POWProcessor();
-		byte[] payloadWithoutNonce = ArrayCopier.copyOfRange(payloadBytes, 8, payloadBytes.length); // The pow nonce is calculated for the rest of the payload
-		boolean powValid = powProc.checkPOW(payloadWithoutNonce, powNonce, toPubkey.getNonceTrialsPerByte(), toPubkey.getExtraBytes()); // Dividing the nonceTrialsPerByte value by 320 gives us the difficulty factor
-		assertTrue(powValid);
-		
-		// Check the time value
-		long time = ByteUtils.bytesToLong(timeBytes);
-		long currentTime = System.currentTimeMillis() / 1000; // Gets the current time in seconds
-    	long maxTime = currentTime + 1800; // 1800 seconds equals 30 minutes - allows plenty of time for POW to be completed
-    	long minTime = currentTime - 1800;
-		assertTrue(time < maxTime);
-		assertTrue(time > minTime);
-		
-		// Check the stream number
-		int streamNumber = (int) (VarintEncoder.decode(streamNumberBytes))[0];
-		int expectedStreamNumber = toPubkey.getStreamNumber();
-		assertEquals(streamNumber, expectedStreamNumber);
-				
 		// Process the msg, giving us the decrypted message data
 		IncomingMessageProcessor inProc = new IncomingMessageProcessor();
 		Message decryptedMessage = inProc.processReceivedMsg(msgPayload);

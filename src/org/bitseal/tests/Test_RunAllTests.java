@@ -108,7 +108,7 @@ public class Test_RunAllTests
 		suite.addTestSuite(Test_RequestEncryptedPubkeyFromServer.class);
 		suite.addTestSuite(Test_RequestMessagesFromServer.class);
 		suite.addTestSuite(Test_RequestPubkeyFromServer.class);
-		
+				
 		// Tests from "pow" package
 		suite.addTestSuite(Test_CalculateAndVerifyPOW.class);
 		

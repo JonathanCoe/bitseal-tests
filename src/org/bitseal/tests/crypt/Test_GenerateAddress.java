@@ -66,7 +66,7 @@ public class Test_GenerateAddress extends TestCase
 		byte[] checksum = ArrayCopier.copyOfRange(addressDataBytes, (addressDataBytes.length - 4), addressDataBytes.length);
 		Log.i(TAG, "Checksum:          " + ByteFormatter.byteArrayToHexString(checksum));
 		
-		byte[] testChecksumFullHash = SHA512.doubleDigest(combinedAddressData);
+		byte[] testChecksumFullHash = SHA512.doubleHash(combinedAddressData);
 		Log.i(TAG, "Test Checksum Full Hash:          " + ByteFormatter.byteArrayToHexString(testChecksumFullHash));
 		
 		byte[] testChecksum = ArrayCopier.copyOfRange(testChecksumFullHash, 0, 4);

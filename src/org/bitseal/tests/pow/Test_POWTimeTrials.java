@@ -21,7 +21,6 @@ public class Test_POWTimeTrials extends TestCase
 	private static final int TRIALS_TO_RUN = 1;
 	
 	private static final int PAYLOAD_LENGTH = 800;
-	private static final long TIME_TO_LIVE = 60;
 	
 	private static final long NONCE_TRIALS_PER_BYTE = 1000;
 	private static final long EXTRA_BYTES = 1000;
@@ -45,6 +44,9 @@ public class Test_POWTimeTrials extends TestCase
 		POWProcessor powProc = new POWProcessor();
 		ArrayList<Long> times = new ArrayList<Long>();
 		
+		// Set an expiration time of 1 hour from now
+		long expirationTime = (System.currentTimeMillis() / 1000) + 3600;
+		
 		for (int i = 0; i < TRIALS_TO_RUN; i++)
 		{
  			long startTime = 0;
@@ -54,12 +56,12 @@ public class Test_POWTimeTrials extends TestCase
 			//----------------------------------BEGIN TIMED TEST----------------------------------------------
  			startTime = System.nanoTime();
 			
-			long powNonce = powProc.doPOW(payload, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES, TIME_TO_LIVE);
+			long powNonce = powProc.doPOW(payload, expirationTime, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES);
 			
  			endTime = System.nanoTime();
  			//----------------------------------END TIMED TEST----------------------------------------------
  			
- 			assertTrue(powProc.checkPOW(payload, powNonce, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES));
+ 			assertTrue(powProc.checkPOW(payload, powNonce, expirationTime, NONCE_TRIALS_PER_BYTE, EXTRA_BYTES));
  			timeTaken = endTime - startTime;
  			long timeTakenInSeconds = timeTaken / 1000000000; // Convert from nanoseconds to seconds
  			Log.i(TAG, "Time taken in seconds:          " + timeTakenInSeconds);
