@@ -32,6 +32,8 @@ import android.util.Log;
  */
 public class Test_SignatureBasic extends TestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_SIGNATURE_BASIC";
 	
 	protected void setUp() throws Exception
@@ -68,17 +70,17 @@ public class Test_SignatureBasic extends TestCase
 		// Process the Message and use it to create an UnencryptedMsg object. This process will include the creation
 		// of a signature for the UnencryptedMsg. Use reflection to access the private method constructUnencryptedMsg()
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();		
-		Method method = OutgoingMessageProcessor.class.getDeclaredMethod("constructUnencryptedMsg", Message.class, Pubkey.class, boolean.class);
+		Method method = OutgoingMessageProcessor.class.getDeclaredMethod("constructUnencryptedMsg", Message.class, Pubkey.class, boolean.class, long.class);
 		method.setAccessible(true);
-		UnencryptedMsg unencMsg = (UnencryptedMsg) method.invoke(outMsgProc, message, toPubkey, true);
+		UnencryptedMsg unencMsg = (UnencryptedMsg) method.invoke(outMsgProc, message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		
 		// Verify the UnencryptedMsg's signature
 		byte[] unencMsgSignature = unencMsg.getSignature();
 		Log.i(TAG, "UnencryptedMsg signature in hex: " + ByteFormatter.byteArrayToHexString(unencMsgSignature));
 		ECPublicKey publicSigningKey = new KeyConverter().reconstructPublicKey(fromPubkey.getPublicSigningKey());
 		SigProcessor sigProc = new SigProcessor();
-		byte[] msgSignaturePayload = sigProc.createUnencryptedMsgSignaturePayload(unencMsg);
-		boolean sigValid = sigProc.verifySignature(msgSignaturePayload, unencMsgSignature, publicSigningKey);
+		byte[] unencmsgSignaturePayload = sigProc.createUnencryptedMsgSignaturePayload(unencMsg);
+		boolean sigValid = sigProc.verifySignature(unencmsgSignaturePayload, unencMsgSignature, publicSigningKey);
 		if (sigValid == true)
 		{
 			Log.i(TAG, "UnencryptedMsg signature was valid");

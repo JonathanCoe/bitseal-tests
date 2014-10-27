@@ -54,6 +54,8 @@ public class Test_CalculateMAC extends TestCase
 	private static final String INVALID_MESSAGE_BODY = "Invalid message body ";
 	private static final int NUMBER_OF_INVALID_MESSAGES = 2;
 	
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_CALCULATE_MAC";
 	
 	protected void setUp() throws Exception
@@ -98,7 +100,7 @@ public class Test_CalculateMAC extends TestCase
 			
 			Log.i(TAG, "Created message with subject '" + messageSubject + "' and body '" + messageBody + "'");
 			
-			Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true);
+			Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 			validMsgs.add(msgPayload);
 			
 			messageCounter ++;
@@ -121,7 +123,7 @@ public class Test_CalculateMAC extends TestCase
 			
 			Log.i(TAG, "Created message with subject '" + messageSubject + "' and body '" + messageBody + "'");
 			
-			Payload msgPayload = outProc.processOutgoingMessage(message, otherPubkey, true);
+			Payload msgPayload = outProc.processOutgoingMessage(message, otherPubkey, true, TEST_MSG_TIME_TO_LIVE);
 			invalidMsgs.add(msgPayload);
 			
 			messageCounter ++;

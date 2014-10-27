@@ -4,9 +4,11 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.bitseal.core.App;
 import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.crypt.SHA256;
 import org.bitseal.data.Address;
+import org.bitseal.database.AddressProvider;
 import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.Base58;
 import org.bitseal.util.ByteFormatter;
@@ -19,6 +21,9 @@ import android.util.Log;
 **/
 public class Test_EncodePrivateKeysInWIF extends TestCase
 {
+	private static final int WIF_PRIVATE_KEY_MIN_LENGTH = 49;
+	private static final int WIF_PRIVATE_KEY_MAX_LENGTH = 51;
+	
 	private static final String TAG = "TEST_ENCODE_PRIVATE_KEYS_IN_WIF";
 	
 	protected void setUp() throws Exception
@@ -33,23 +38,25 @@ public class Test_EncodePrivateKeysInWIF extends TestCase
 	
 	public void testEncodePrivateKeysInWIF()
 	{
+		// Generate a new Bitmessage address
 		AddressGenerator addressGenerator = new AddressGenerator();
+		Address address = addressGenerator.generateAndSaveNewAddress();		
+		Log.i(TAG, "Generated Address:             " + address.getAddress());
 		
-		Address bitmessageAddress = addressGenerator.generateAndSaveNewAddress();
-				
-		Log.i(TAG, "Generated Address:             " + bitmessageAddress.getAddress());
+		String privateSigningKey = address.getPrivateSigningKey();
+		String privateEncryptionKey = address.getPrivateEncryptionKey();
 		
-		String privateSigningKey = bitmessageAddress.getPrivateSigningKey();
-		String privateEncryptionKey = bitmessageAddress.getPrivateEncryptionKey();
+		// Check that both private keys are of a valid length
+		Log.i(TAG, "Length of private signing key:    " + privateSigningKey.length());
+		Log.i(TAG, "Length of private encryption key: " + privateEncryptionKey.length());
+		assertTrue((privateSigningKey.length() >= WIF_PRIVATE_KEY_MIN_LENGTH) && (privateSigningKey.length() <= WIF_PRIVATE_KEY_MAX_LENGTH));
+		assertTrue((privateEncryptionKey.length() >= WIF_PRIVATE_KEY_MIN_LENGTH) && (privateEncryptionKey.length() <= WIF_PRIVATE_KEY_MAX_LENGTH));
 		
-		// Test check 1: Check that both private keys are 51 characters in length, as they should be
-		assertEquals(privateSigningKey.length(), 51);
-		assertEquals(privateEncryptionKey.length(), 51);
+		// Check that the first character of the output is 5
+		assertEquals("5", privateSigningKey.substring(0, 1));	
+		assertEquals("5", privateEncryptionKey.substring(0, 1));
 		
-		// Test check 2: Check that the first character of the output is 5
-		assertEquals(privateSigningKey.substring(0, 1), "5");	
-		assertEquals(privateEncryptionKey.substring(0, 1), "5");
-		
+		// Check whether the checksum of each key is correct
 		byte[] privateSigningKeyBytes = null;
 		byte[] privateEncryptionKeyBytes = null;
 
@@ -74,8 +81,11 @@ public class Test_EncodePrivateKeysInWIF extends TestCase
 		byte[] privateEncryptionKeyTestChecksum = ArrayCopier.copyOfRange(hashOfPrivateEncryptionKeyBytesMinusChecksum, 0, 4);
 		Log.i(TAG, "Private Encryption Key Test Checksum:          " + ByteFormatter.byteArrayToHexString(privateEncryptionKeyTestChecksum));
 		
-		// Test check 3: Having re-calculated the checksum for each key, check if it is equal to the checksum of the key provided
 		assertTrue(Arrays.equals(privateSigningKeyChecksum, privateSigningKeyTestChecksum));
 		assertTrue(Arrays.equals(privateEncryptionKeyChecksum, privateEncryptionKeyTestChecksum));
+		
+		// Cleaning up - delete the address we created from the database
+		AddressProvider addProv = AddressProvider.get(App.getContext());
+		addProv.deleteAddress(address);
 	}
 }

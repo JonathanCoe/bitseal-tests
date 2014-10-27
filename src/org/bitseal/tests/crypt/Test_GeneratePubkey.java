@@ -43,37 +43,40 @@ public class Test_GeneratePubkey extends TestCase
 		PubkeyGenerator pubkeyGen = new PubkeyGenerator();
 		Pubkey pubkey = pubkeyGen.generateAndSaveNewPubkey(address);
 		
-		// Test check 1: Check the pubkey's "correspondingAddressID" matches the ID of the address that it was based on
+		// Check the pubkey's "correspondingAddressID" matches the ID of the address that it was based on
 		Log.i(TAG, "Generated Pubkey 'correspondingAddressID':  " + pubkey.getCorrespondingAddressId());
 		assertEquals(pubkey.getCorrespondingAddressId(), address.getId());
 		
-		// Test check 2: Check the pubkey's "belongsToMe" value is set to true
+		// Check the pubkey's "belongsToMe" value is set to true
 		Log.i(TAG, "Generated Pubkey 'belongsToMe':             " + pubkey.belongsToMe());
 		assertEquals(pubkey.belongsToMe(), true);
 		
-		// Test check 3: Check the pubkey's "time" value is within the range of the current time plus or minus 8 minutes (extra time to allow for POW to be calculated)
-		long time = System.currentTimeMillis() / 1000; // Gets the current time in seconds
-    	long maxTime = time + 480; // 480 seconds equals 8 minutes
-    	long minTime = time - 480;	
-		Log.i(TAG, "Generated Pubkey 'time':                    " + pubkey.getTime());
-		assertTrue(pubkey.getTime() < maxTime && pubkey.getTime() > minTime);
+		// Check the pubkey's "time" value is within the range of the current time plus or minus 8 minutes (extra time to allow for POW to be calculated)
+		long currentTime = System.currentTimeMillis() / 1000; // Gets the current time in seconds
+    	long maxTime = currentTime + 2419500; // 28 days and five minutes in the future
+    	long minTime = currentTime + 300; // Five minutes in the future	
+    	Log.i(TAG, "Pubey max time: " + maxTime);
+    	Log.i(TAG, "Pubey min time: " + minTime);
+		Log.i(TAG, "Generated Pubkey 'expiration time':         " + pubkey.getExpirationTime());
+		assertTrue(pubkey.getExpirationTime() < maxTime);
+		assertTrue(pubkey.getExpirationTime() > minTime);
 		
-		// Test check 4: Check the pubkey's "signatureLength" value is equal to the value of its signature		
+		// Check the pubkey's "signatureLength" value is equal to the value of its signature		
 		Log.i(TAG, "Generated Pubkey 'signatureLength':         " + pubkey.getSignatureLength());
 		assertEquals(pubkey.getSignatureLength(), pubkey.getSignature().length);
 		
-		// Test check 5: Use the pubkey's "addressVersion", "streamNumber", "publicSigningKey", and "publicEncryptionKey" values to recalculate the address String
+		// Use the pubkey's "addressVersion", "streamNumber", "publicSigningKey", and "publicEncryptionKey" values to recalculate the address String
 		// of the address that it was based on and check if the two match
-		String recreatedAddressString = addGen.recreateAddressString(pubkey.getAddressVersion(), pubkey.getStreamNumber(), pubkey.getPublicSigningKey(), pubkey.getPublicEncryptionKey());
+		String recreatedAddressString = addGen.recreateAddressString(pubkey.getObjectVersion(), pubkey.getStreamNumber(), pubkey.getPublicSigningKey(), pubkey.getPublicEncryptionKey());
 		Log.i(TAG, "Original Address String:                    " + address.getAddress());
 		Log.i(TAG, "Recreated Address String:                   " + recreatedAddressString);
 		assertEquals(address.getAddress(), recreatedAddressString);
 		
-		// Test check 6: Test that the pubkey's "behaviourBitfield" value matches the one provided by my BehaviourBitfieldHandler class	
+		// Check that the pubkey's "behaviourBitfield" value matches the one provided by my BehaviourBitfieldHandler class	
 		Log.i(TAG, "Generated Pubkey 'behaviourBitfield':       " + pubkey.getBehaviourBitfield());
 		assertEquals(pubkey.getBehaviourBitfield(), BehaviourBitfieldProcessor.getBitfieldForMyPubkeys());
 		
-		// Test check 7: Test that the pubkey's signature is valid
+		// Test that the pubkey's signature is valid
 		Log.i(TAG, "Generated Pubkey 'signature':               " + ByteFormatter.byteArrayToHexString(pubkey.getSignature()));
 		SigProcessor sigProc = new SigProcessor();
 		byte[] signaturePayload = sigProc.createPubkeySignaturePayload(pubkey);

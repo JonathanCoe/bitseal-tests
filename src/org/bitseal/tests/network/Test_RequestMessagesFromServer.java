@@ -42,6 +42,8 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 	private static final String MESSAGE_2_SUBJECT = "Have we seen the last days of lent?";
 	private static final String MESSAGE_2_BODY = "Wriggling softly, the mouse shuffles onwards";
 	
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_REQUEST_MESSAGES_FROM_SERVER";
 	
 	protected void setUp() throws Exception
@@ -117,9 +119,9 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 		
 		// Take the messages and process them, giving three msgs that are ready to be sent over the network
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();
-		Payload msgPayload0 = outMsgProc.processOutgoingMessage(message0, toPubkey, true);
-		Payload msgPayload1 = outMsgProc.processOutgoingMessage(message1, toPubkey, true);
-		Payload msgPayload2 = outMsgProc.processOutgoingMessage(message2, toPubkey, true);
+		Payload msgPayload0 = outMsgProc.processOutgoingMessage(message0, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
+		Payload msgPayload1 = outMsgProc.processOutgoingMessage(message1, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
+		Payload msgPayload2 = outMsgProc.processOutgoingMessage(message2, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		
 		Log.i(TAG, "msg0 bytes in hex: " + ByteFormatter.byteArrayToHexString(msgPayload0.getPayload()));
 		Log.i(TAG, "msg1 bytes in hex: " + ByteFormatter.byteArrayToHexString(msgPayload1.getPayload()));

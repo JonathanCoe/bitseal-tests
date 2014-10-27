@@ -18,7 +18,7 @@ import android.util.Log;
 
 /**
  * A simple test that runs through all the code necessary to take a message written by a user and turn it into 
- * and enrypted message that is ready for transmission across the Bitmessage network. <br><br>
+ * and encrypted message that is ready for transmission across the Bitmessage network. <br><br>
  * 
  * This basic test is not particularly rigorous in checking its output, but should at least
  * allow us to detect any crashes.
@@ -27,6 +27,8 @@ import android.util.Log;
  */
 public class Test_EncryptionBasic extends TestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_ENCRYPTION_BASIC";
 	
 	protected void setUp() throws Exception
@@ -61,7 +63,7 @@ public class Test_EncryptionBasic extends TestCase
 		
 		// Process the Message, giving us the byte[] of msg data ready to be sent over the network
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();
-		Payload msgToSend = outMsgProc.processOutgoingMessage(message, toPubkey, true);
+		Payload msgToSend = outMsgProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		
 		Log.i(TAG, "msgToSend :                                 " + ByteFormatter.byteArrayToHexString(msgToSend.getPayload()));
 		

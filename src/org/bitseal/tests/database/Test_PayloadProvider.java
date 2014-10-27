@@ -79,6 +79,7 @@ public class Test_PayloadProvider extends AndroidTestCase
 		record0.setBelongsToMe(true);
 		record0.setProcessingComplete(true);
 		record0.setType(Payload.OBJECT_TYPE_MSG);
+		record0.setAck(false);
 		record0.setPOWDone(true);
 		record0.setPayload(payload0);
 	
@@ -86,15 +87,17 @@ public class Test_PayloadProvider extends AndroidTestCase
 		record1.setBelongsToMe(true);
 		record1.setProcessingComplete(false);
 		record1.setType(Payload.OBJECT_TYPE_PUBKEY);
+		record0.setAck(true);
 		record1.setPOWDone(false);
 		record1.setPayload(payload1);
 		
-		Payload record2 = new Payload();
+		Payload record2 = new Payload(); // Deliberate duplicate for testing - see below
 		record2.setBelongsToMe(true);
 		record2.setProcessingComplete(false);
 		record2.setType(Payload.OBJECT_TYPE_PUBKEY);
+		record0.setAck(true);
 		record2.setPOWDone(false);
-		record2.setPayload(payload1);	// Deliberate duplicate for testing - see below
+		record2.setPayload(payload1);
 		
 		provider.addPayload(record0);
 		provider.addPayload(record1);

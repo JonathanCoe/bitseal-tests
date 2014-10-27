@@ -28,6 +28,8 @@ import android.util.Log;
  */
 public class Test_DecryptionBasic extends TestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_DECRYPTION_BASIC";
 	
 	protected void setUp() throws Exception
@@ -41,7 +43,7 @@ public class Test_DecryptionBasic extends TestCase
 	}
 	
 	public void testDecryptionBasic()
-	{
+	{		
 		// Generate a 'to' address and a 'from' address
 		AddressGenerator addGen = new AddressGenerator();
 		Address toAddress = addGen.generateAndSaveNewAddress();
@@ -69,7 +71,7 @@ public class Test_DecryptionBasic extends TestCase
 		
 		// Process the Message, giving us the byte[] of msg data ready to be sent over the network
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();
-		Payload msgToSend = outMsgProc.processOutgoingMessage(message, toPubkey, true);
+		Payload msgToSend = outMsgProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		msgToSend.setRelatedAddressId(toAddress.getId());
 		Log.i(TAG, "msgToSend :                                 " + ByteFormatter.byteArrayToHexString(msgToSend.getPayload()));
 				
@@ -79,13 +81,16 @@ public class Test_DecryptionBasic extends TestCase
 		
 		// Take the decrypted message and check if it is correct
 		Log.i(TAG, "Decrypted message text: " + decryptedMessage.getBody());
+		assertEquals(decryptedMessage.getToAddress(), toAddress.getAddress());
+		assertEquals(decryptedMessage.getFromAddress(), fromAddress.getAddress());
+		assertEquals(decryptedMessage.getSubject(), "An extremely interesting subject line");
 		assertEquals(decryptedMessage.getBody(), "I hope that this message is suitably loquacious");
 		
 		// Cleaning up - delete the addresses and pubkeys we created from the database
 		AddressProvider addProv = AddressProvider.get(App.getContext());
+		PubkeyProvider pubProv = PubkeyProvider.get(App.getContext());
 		addProv.deleteAddress(toAddress);
 		addProv.deleteAddress(fromAddress);
-		PubkeyProvider pubProv = PubkeyProvider.get(App.getContext());
 		pubProv.deletePubkey(toPubkey);
 		pubProv.deletePubkey(fromPubkey);
 	}

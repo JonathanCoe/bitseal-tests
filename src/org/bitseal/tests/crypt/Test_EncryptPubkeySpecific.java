@@ -35,6 +35,11 @@ import android.util.Log;
  */
 public class Test_EncryptPubkeySpecific extends AndroidTestCase
 {
+	/** The object type number for pubkeys, as defined by the Bitmessage protocol */
+	private static final int OBJECT_TYPE_PUBKEY = 1;
+	
+	private static final int PUBKEY_VERSION = 4;
+	
 	private static final String TAG = "TEST_ENCRYPT_PUBKEY_SPECIFIC";
 	
 	protected void setUp() throws Exception
@@ -69,45 +74,35 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
         }
 	}
 	
-	@SuppressWarnings("unused")
 	public void testEncryptPubkeySpecific()
 	{
 		// Wait for five seconds in order to make it more likely that we will be able to get application context
 		SystemClock.sleep(5000);
 		
 		// Starting data:
-		String testAddressString = "BM-2cXdemXcNztvNhoGTau7Zpq1nf7odwUaKr";
+		String testAddressString = "BM-2cWH3y8Kyzyy7j4fYkwj6qDWzqZRUqqb2a";
 		
-		String pybitmessageEncryptedPubkeyHex = "000000000076272c000000005361600f0401c4574a1ac4e28927a5c5148e14325da16a1348f6d40ca1" +
-												"ff3429ed8ea2bdfa61b4fa03074db45a6d43a324b90250c0ad02ca00209fcbafbc1a2c48a4d46bcfb4" +
-												"884033fa0d96ec3545fc7def13b91e26f951c82900200c8ea0d205f7778ed9875886fa18156dae6a63" +
-												"075f51a6e5a52aa6327a82f6277c0d0c20f6441a8f6a45c9e3ed90189a9ed4dee47c6ea567c772a510" +
-												"44497e80fca8690263197fc28061da6fa2f51101e140d4bcd11ee409be1723814a51f85fbbaf778b10" +
-												"c45e62312e16c662f6cb81f83f3d7702e44694ef790aa5ed026078c21e209fc4ba3878cf51f13bb11e" +
-												"c6a6d936bce7f75f6b6f1e55da68f71a5f76608ce5cb5b218a4a0db71aca2e74f9010d01fab6a9205d" +
-												"5712eae9ba136ea57012064cb8c2ec5d96a0707a231b2e23453b9c2564b1bce0a4ff0672a2f49fe4cf" +
-												"5b6af8cd97a1eacf12d080fb1ca32da08cbbc067ea1917897dda2360ddd3145213a217381c2960fbec" +
-												"a999c8f9f2a27f164d11955f510379e3c43c65c6fc3403";
-		String powNonce = "7743276";
-		String time = "1398890511";
-		String addressVersionHex = "04";
-		String streamNumberHex = "01";
-		String behaviourBitfieldHex = "00000001";
-		String publicSigningKeyHex = "853b3e742b41f1c3c1c0ea6cfc230da982adc5c3e6a07e3ef30bdb1f4d2101e6df904a286aae9a482493d671c353584ebec8a95f1cd3bc0e6620633af2227c2d";
-		String publicEncryptionKeyHex = "e4fc38aac159547f26fb0ea78ea65e97764ea0f2f8957aa5edb83f54957ad0c48adba6b33fe32376875c0701f769307978c37e76bc1efc920c7bdc4c110904db";
-		String nonceTrialsPerByteHex = "fd0280";
-		String signatureLengthHex = "48";
-		String signatureHex = "3046022100d84bb537198c3727f135a475bfa0aadf77aaa608cee2a6fdabda0042cfb1a2da02210091145a3a5ca984bbca" +
-							  "5264045d77c4ad608525378fab271a9e381522c5181517";
-		
+		String pybitmessagePubkeyPayload = "0000000000ab887c00000000546ccdc700000001040180b3f3318094e78c31dbc6fe6e06fe63e62df8bbe542"
+				+ "aa3a1bb32e3780ed31c202d4d1ed21c70b2588a6aad61e3b694602ca0020a1a8708a03ccc08fd776a2d1657cb1ab197579c0f5de2c35e8de75d8c1"
+				+ "5558250020aaf151c4293c048d4d157eac234c644d6cffd5a611b9757356bd3375c6c290377e1c0724ba0224367bc647e96ec54f5bf18f002e1e93"
+				+ "eec6c22268d8860177f8ae27781248ece9418d8bac80c3a2ea58217f797bffb5c831b64ea3dc2e18bbb8180da38c9cf82bda0611f9375d3a9c6eb0"
+				+ "c6882622e38a1bf1abbe1175fa5f49d3a47ea248767ec8744f94f4cf9df0391a2481895eb5ddef08ea00ff409709879149795e422394e69d1fc335"
+				+ "9b84c4861a3f25a88371b409081c253819df4c9b639600c6d0824807483df602bfd597dc7e5d0dc966585ff0b65b11ee894fa1c6f884ac31fa5021"
+				+ "c4dc285cc14aca145cd4e00a32a41e9b8b0f416463ff97ecc6491d93fac6b78812941c2364dbc4312e24297f2b6e14d2dba804a87eda0337d9";
+		String powNonce = "11241596";
+		String time = "1416416711";
+		String publicSigningKeyHex = "873b21948da767745327e9c5d8f41cb1187e185a74e0442be7c6a8e37c59ecbd035ca33018219992ac20b3a28d55fb138212d57e0b3e41f0b0cba2b153be035b";
+		String publicEncryptionKeyHex = "e20190032915a09f8a3aefdd626421ba90aaaa630eadc432154543ccd5a49a751f3600fa833344f65a7ac02c4902a54ff134b8d846e050ad4c823136687717ae";
+		String signatureHex = "3045022100f541db088b465f742f18bc5682dd2bde0998bdd9c8cb193effb805151e71b01802204b18754cc7e89738dc773f9800103c13ca2f9ddc6537d5ec0a092af8a573152c";
+				
 		// Where necessary, convert the starting values into byte form
-		byte[] pybitmessagePayload = ByteFormatter.hexStringToByteArray(pybitmessageEncryptedPubkeyHex);
+		byte[] pybitmessagePayload = ByteFormatter.hexStringToByteArray(pybitmessagePubkeyPayload);
 		byte[] publicSigningKey = ByteFormatter.hexStringToByteArray(publicSigningKeyHex);
 		byte[] publicEncryptionKey = ByteFormatter.hexStringToByteArray(publicEncryptionKeyHex);
 		byte[] signature = ByteFormatter.hexStringToByteArray(signatureHex);
 		
 		// Save the address from which this pubkey is derived to the database. It will be used when 
-		// the pubkey payload is constructed. Also calculate the tag of the addres. Set some placeholder
+		// the pubkey payload is constructed. Also calculate the tag of the address. Set some placeholder
 		// data for the rest of the fields in the Address object, as they will not be used. 
 		Address testAddress = new Address();
 		testAddress.setAddress(testAddressString);
@@ -118,23 +113,25 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
 		testAddress.setPrivateEncryptionKey("xxx");
 		testAddress.setRipeHash(new AddressGenerator().calculateRipeHash(publicSigningKey, publicEncryptionKey));
 		AddressProvider addProv = AddressProvider.get(App.getContext());
-		long addressId = addProv.addAddress(testAddress);
-		testAddress.setId(addressId);
+		long testAddressId = addProv.addAddress(testAddress);
+		testAddress.setId(testAddressId);
 		
 		// Create the Pubkey object that we will encrypt, using the starting data specified above
 		Pubkey bitsealPubkey = new Pubkey();
-		bitsealPubkey.setCorrespondingAddressId(addressId);
-		bitsealPubkey.setRipeHash(testAddress.getRipeHash());
+		bitsealPubkey.setBelongsToMe(true);
 		bitsealPubkey.setPOWNonce(Long.valueOf(powNonce));
-		bitsealPubkey.setTime(Long.valueOf(time));
-		bitsealPubkey.setAddressVersion(4);
+		bitsealPubkey.setExpirationTime(Long.valueOf(time));
+		bitsealPubkey.setObjectType(OBJECT_TYPE_PUBKEY);
+		bitsealPubkey.setObjectVersion(PUBKEY_VERSION);
 		bitsealPubkey.setStreamNumber(1);
+		bitsealPubkey.setCorrespondingAddressId(testAddressId);
+		bitsealPubkey.setRipeHash(testAddress.getRipeHash());
 		bitsealPubkey.setBehaviourBitfield(1);
 		bitsealPubkey.setPublicSigningKey(publicSigningKey);
 		bitsealPubkey.setPublicEncryptionKey(publicEncryptionKey);
-		bitsealPubkey.setNonceTrialsPerByte(640);
-		bitsealPubkey.setExtraBytes(14000);
-		bitsealPubkey.setSignatureLength(72);
+		bitsealPubkey.setNonceTrialsPerByte(1000);
+		bitsealPubkey.setExtraBytes(1000);
+		bitsealPubkey.setSignatureLength(signature.length);
 		bitsealPubkey.setSignature(signature);
 		
 		// Create the Pubkey payload. This should give us the encrypted data we want to test.
@@ -144,8 +141,8 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
 		// Append the POW nonce to the payload
 		bitsealPayload = ByteUtils.concatenateByteArrays(ByteUtils.longToBytes(Long.valueOf(powNonce)), bitsealPayload);
 		
-		Log.i(TAG, "Encrypted pubkey payload produced by Bitseal:      \n" + ByteFormatter.byteArrayToHexString(bitsealPayload));
-		Log.i(TAG, "Encrypted pubkey payload produced by PyBitmessage: \n" + pybitmessageEncryptedPubkeyHex);
+		Log.i(TAG, "Pubkey payload produced by Bitseal:      \n" + ByteFormatter.byteArrayToHexString(bitsealPayload));
+		Log.i(TAG, "Pubkey payload produced by PyBitmessage: \n" + pybitmessagePubkeyPayload);
 		
 		// Attempt to decrypt both payloads, creating new Pubkey objects from the decrypted data
 		Pubkey decryptedBitsealPubkey = pubProc.reconstructPubkey(bitsealPayload, testAddressString);
@@ -157,8 +154,8 @@ public class Test_EncryptPubkeySpecific extends AndroidTestCase
 		
 		// Check that the data from the pubkeys match
 		assertEquals(decryptedBitsealPubkey.getPOWNonce(), pybitmessagePubkey.getPOWNonce());
-		assertEquals(decryptedBitsealPubkey.getTime(), pybitmessagePubkey.getTime());
-		assertEquals(decryptedBitsealPubkey.getAddressVersion(), pybitmessagePubkey.getAddressVersion());
+		assertEquals(decryptedBitsealPubkey.getExpirationTime(), pybitmessagePubkey.getExpirationTime());
+		assertEquals(decryptedBitsealPubkey.getObjectVersion(), pybitmessagePubkey.getObjectVersion());
 		assertEquals(decryptedBitsealPubkey.getStreamNumber(), pybitmessagePubkey.getStreamNumber());
 		assertEquals(decryptedBitsealPubkey.getBehaviourBitfield(), pybitmessagePubkey.getBehaviourBitfield());
 		assertTrue(Arrays.equals(decryptedBitsealPubkey.getPublicSigningKey(), pybitmessagePubkey.getPublicSigningKey()));

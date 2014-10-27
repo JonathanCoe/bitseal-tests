@@ -44,6 +44,8 @@ public class Test_CalculateKeyM extends TestCase
 	private static final String MESSAGE_SUBJECT = "The message subject ";
 	private static final String MESSAGE_BODY = "The message body ";
 	
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_CALCULATE_KEY_M";
 	
 	protected void setUp() throws Exception
@@ -85,7 +87,7 @@ public class Test_CalculateKeyM extends TestCase
 			
 			Log.i(TAG, "Created message with subject '" + messageSubject + "' and body '" + messageBody + "'");
 			
-			Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true);
+			Payload msgPayload = outProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 			msgs.add(msgPayload);
 			
 			messageCounter ++;

@@ -12,6 +12,9 @@ import android.util.Log;
  * 
  * See https://bitmessage.org/wiki/Protocol_specification#Variable_length_integer
  * 
+ * Note: In Protocol Version 3, 9-byte encoding is no longer valid. See
+ * https://bitmessage.org/wiki/Protocol_specification_v3 <br><br>
+ * 
  * @author Jonathan Coe
  */
 public class Test_VarintEncoding extends TestCase
@@ -69,13 +72,5 @@ public class Test_VarintEncoding extends TestCase
 		Log.i(TAG, "Decoded 100000: Decimal value " + decoded100000[0] + ", Bytes used " + decoded100000[1]);
 		assertEquals(decoded100000[0], 100000);
 		assertEquals(decoded100000[1], 5);
-		
-		//Test with 10,000,000,000 (ten billion)
-		byte[] encoded10000000000 = VarintEncoder.encode(10000000000L);
-		long[] decoded10000000000 = VarintEncoder.decode(encoded10000000000);
-		Log.i(TAG, "Encoded 10000000000: " + ByteFormatter.byteArrayToHexString(encoded10000000000));
-		Log.i(TAG, "Decoded 10000000000: Decimal value " + decoded10000000000[0] + ", Bytes used " + decoded10000000000[1]);
-		assertEquals(decoded10000000000[0], 10000000000L);
-		assertEquals(decoded10000000000[1], 9);
 	}
 }

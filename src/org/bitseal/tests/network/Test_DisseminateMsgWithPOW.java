@@ -32,6 +32,8 @@ import android.util.Log;
 **/
 public class Test_DisseminateMsgWithPOW extends AndroidTestCase
 {
+	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	
 	private static final String TAG = "TEST_DISSEMINATE_MSG_WITH_POW";
 	
 	protected void setUp() throws Exception
@@ -97,7 +99,7 @@ public class Test_DisseminateMsgWithPOW extends AndroidTestCase
 		
 		// Take the message and process it, giving a msg that is ready to be sent over the network
 		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();
-		Payload msgPayload = outMsgProc.processOutgoingMessage(message, toPubkey, true);
+		Payload msgPayload = outMsgProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
 		Log.i(TAG, "msg to be sent over the network: " + ByteFormatter.byteArrayToHexString(msgPayload.getPayload()));
 		
 		// Disseminate the message payload to the rest of the network via a PyBitmessage server
