@@ -13,7 +13,8 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 /** 
- * Tests the requestEncryptedPubkeyFromServer() method in the ServerCommunicator class.<br><br>
+ * Tests the requestEncryptedPubkeyFromServer() method in the ServerCommunicator class.
+ * This applies to addresses of version 4 and above.<br><br>
  * 
  * Note: The use of AndroidTestCase is necessary in order to ensure that 
  * the application context will be available when the main body of the test 
@@ -23,6 +24,10 @@ import android.util.Log;
 **/
 public class Test_RequestEncryptedPubkeyFromServer extends AndroidTestCase
 {
+	// Start the test with a String representing a Bitmessage address. For 'real world' testing,
+	// this should be an address owned by a real Bitmessage node that is active on the network.
+	private static final String TEST_ADDRESS = "BM-2cWH3y8Kyzyy7j4fYkwj6qDWzqZRUqqb2a";
+	
 	private static final String TAG = "TEST_REQUEST_ENCRYPTED_PUBKEY_FROM_SERVER";
 	
 	protected void setUp() throws Exception
@@ -62,27 +67,23 @@ public class Test_RequestEncryptedPubkeyFromServer extends AndroidTestCase
 		// Wait for five seconds in order to make it more likely that we will be able to get application context
 		SystemClock.sleep(5000);
 		
-		// Start the test with a String representing a Bitmessage address. For 'real world' testing,
-		// this should be an address of version 4 or above, owned by a real Bitmessage node that is active on the network.
-		String testAddress = "BM-2cVMnheVsC4oMzqmTV5xXfRYworaBnoJn7";
-		
 		// Validate the address - if it is not valid then we should stop the test now
 		AddressProcessor addProc = new AddressProcessor();
-		assertTrue(addProc.validateAddress(testAddress));
+		assertTrue(addProc.validateAddress(TEST_ADDRESS));
 		
 		// Extract the address version number from the address
-		int[] addressNumbers = addProc.decodeAddressNumbers(testAddress);
+		int[] addressNumbers = addProc.decodeAddressNumbers(TEST_ADDRESS);
 		int addressVersion = addressNumbers[0];
 		
 		// Calculate the tag that will be used to request the encrypted pubkey
-		byte[] tag = addProc.calculateAddressTag(testAddress);
+		byte[] tag = addProc.calculateAddressTag(TEST_ADDRESS);
 		
 		// Use the tag derived from the address to request the corresponding pubkey from a server
 		ServerCommunicator servCom = new ServerCommunicator();
-		Pubkey pubkey = servCom.requestPubkeyFromServer(testAddress, tag, addressVersion);
+		Pubkey pubkey = servCom.requestPubkeyFromServer(TEST_ADDRESS, tag, addressVersion);
 		
 		// Now check that the pubkey is valid 
 		PubkeyProcessor pubProc = new PubkeyProcessor();
-		assertTrue(pubProc.validatePubkey(pubkey, testAddress));
+		assertTrue(pubProc.validatePubkey(pubkey, TEST_ADDRESS));
 	}
 }

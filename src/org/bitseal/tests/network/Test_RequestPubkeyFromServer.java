@@ -13,7 +13,8 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 /** 
- * Tests the requestPubkeyFromServer() method in the ServerCommunicator class.<br><br>
+ * Tests the requestPubkeyFromServer() method in the ServerCommunicator class.
+ * This applies to addresses of version 3 and below.<br><br>
  * 
  * Note: The use of AndroidTestCase is necessary in order to ensure that 
  * the application context will be available when the main body of the test 
@@ -23,6 +24,10 @@ import android.util.Log;
 **/
 public class Test_RequestPubkeyFromServer extends AndroidTestCase
 {
+	// Start the test with a String representing a Bitmessage address. For 'real world' testing,
+	// this should be an address owned by a real Bitmessage node that is active on the network.
+	private static final String TEST_ADDRESS = "BM-2DBSnCkJFSVEAyJLtJWYhtdQEJVEojzbc7";
+	
 	private static final String TAG = "TEST_REQUEST_PUBKEY_FROM_SERVER";
 	
 	protected void setUp() throws Exception
@@ -62,27 +67,23 @@ public class Test_RequestPubkeyFromServer extends AndroidTestCase
 		// Wait for five seconds in order to make it more likely that we will be able to get application context
 		SystemClock.sleep(5000);
 		
-		// Start the test with a String representing a Bitmessage address. For 'real world' testing,
-		// this should be an address of version 3 or below, owned by a real Bitmessage node that is active on the network.
-		String testAddress = "BM-2DBSnCkJFSVEAyJLtJWYhtdQEJVEojzbc7";
-		
 		// Validate the address - if it is not valid then we should stop the test now
 		AddressProcessor addProc = new AddressProcessor();
-		assertTrue(addProc.validateAddress(testAddress));
+		assertTrue(addProc.validateAddress(TEST_ADDRESS));
 		
 		// Extract the address version number from the address
-		int[] addressNumbers = addProc.decodeAddressNumbers(testAddress);
+		int[] addressNumbers = addProc.decodeAddressNumbers(TEST_ADDRESS);
 		int addressVersion = addressNumbers[0];
 		
 		// Extract the ripe hash from this address
-		byte[] ripeHash = addProc.extractRipeHashFromAddress(testAddress);
+		byte[] ripeHash = addProc.extractRipeHashFromAddress(TEST_ADDRESS);
 		
 		// Use the ripe hash extracted from the address to request the corresponding pubkey from a server
 		ServerCommunicator servCom = new ServerCommunicator();
-		Pubkey pubkey = servCom.requestPubkeyFromServer(testAddress, ripeHash, addressVersion);
+		Pubkey pubkey = servCom.requestPubkeyFromServer(TEST_ADDRESS, ripeHash, addressVersion);
 		
 		// Now check that the pubkey is valid 
 		PubkeyProcessor pubProc = new PubkeyProcessor();
-		assertTrue(pubProc.validatePubkey(pubkey, testAddress));
+		assertTrue(pubProc.validatePubkey(pubkey, TEST_ADDRESS));
 	}
 }

@@ -34,16 +34,16 @@ import org.bitseal.tests.database.Test_PubkeyProvider;
 import org.bitseal.tests.database.Test_QueueRecordProvider;
 import org.bitseal.tests.database.Test_ServerRecordProvider;
 import org.bitseal.tests.network.Test_ConnectToServer;
-import org.bitseal.tests.network.Test_DisseminateGetpubkeyWithPOW;
-import org.bitseal.tests.network.Test_DisseminateMsgWithPOW;
-import org.bitseal.tests.network.Test_DisseminatePubkeyWithPOW;
+import org.bitseal.tests.network.Test_DisseminateGetpubkey;
+import org.bitseal.tests.network.Test_DisseminateMsg;
+import org.bitseal.tests.network.Test_DisseminatePubkey;
 import org.bitseal.tests.network.Test_RequestEncryptedPubkeyFromServer;
 import org.bitseal.tests.network.Test_RequestMessagesFromServer;
 import org.bitseal.tests.network.Test_RequestPubkeyFromServer;
 import org.bitseal.tests.pow.Test_CalculateAndVerifyPOW;
 import org.bitseal.tests.services.Test_SortQueueRecords;
-import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_ColourCalculator;
+import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_RemoveBytesFromArray;
 import org.bitseal.tests.util.Test_TimeUtils;
 import org.bitseal.tests.util.Test_VarintEncoding;
@@ -102,9 +102,9 @@ public class Test_RunAllTests
 		
 		// Tests from "network" package
 		suite.addTestSuite(Test_ConnectToServer.class);
-		suite.addTestSuite(Test_DisseminateGetpubkeyWithPOW.class);
-		suite.addTestSuite(Test_DisseminateMsgWithPOW.class);
-		suite.addTestSuite(Test_DisseminatePubkeyWithPOW.class);
+		suite.addTestSuite(Test_DisseminateGetpubkey.class);
+		suite.addTestSuite(Test_DisseminateMsg.class);
+		suite.addTestSuite(Test_DisseminatePubkey.class);
 		suite.addTestSuite(Test_RequestEncryptedPubkeyFromServer.class);
 		suite.addTestSuite(Test_RequestMessagesFromServer.class);
 		suite.addTestSuite(Test_RequestPubkeyFromServer.class);

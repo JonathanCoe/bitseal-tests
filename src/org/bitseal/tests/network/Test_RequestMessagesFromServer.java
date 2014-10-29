@@ -42,7 +42,7 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 	private static final String MESSAGE_2_SUBJECT = "Have we seen the last days of lent?";
 	private static final String MESSAGE_2_BODY = "Wriggling softly, the mouse shuffles onwards";
 	
-	private static final long TEST_MSG_TIME_TO_LIVE = 600;
+	private static final long TEST_MSG_TIME_TO_LIVE = 3600; // In seconds, so currently equals to 1 hour
 	
 	private static final String TAG = "TEST_REQUEST_MESSAGES_FROM_SERVER";
 	
@@ -127,7 +127,7 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 		Log.i(TAG, "msg1 bytes in hex: " + ByteFormatter.byteArrayToHexString(msgPayload1.getPayload()));
 		Log.i(TAG, "msg2 bytes in hex: " + ByteFormatter.byteArrayToHexString(msgPayload2.getPayload()));
 		
-		// Disseminate the msgs to the rest of the network via a PyBitmessage server
+		// Disseminate the msgs to the rest of the network via a Bitseal server
 		ServerCommunicator servCom = new ServerCommunicator();
 		boolean disseminationSuccessful = servCom.disseminateMsg(msgPayload0.getPayload());	
 		if (disseminationSuccessful == true)
@@ -167,7 +167,7 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 		Log.i(TAG, "About to wait for " + waitTimeSeconds + " seconds so that the msgs can circulate around the network");
 		SystemClock.sleep(waitTimeSeconds * 1000);
 		
-		// Delete any existing Payload object in the database to avoid false positive results
+		// Delete any existing Payload objects in the database to avoid false positive results
 		PayloadProvider payProv = PayloadProvider.get(App.getContext());
 		payProv.deleteAllPayloads();
 		
@@ -175,31 +175,53 @@ public class Test_RequestMessagesFromServer extends AndroidTestCase
 		servCom.checkServerForNewMsgs();
 		
 		// Search the database for the Payloads of any possible new msgs
-		ArrayList<Payload> retrievedPayloads = payProv.searchPayloads(PayloadsTable.COLUMN_TYPE, Payload.OBJECT_TYPE_MSG);
-		if (retrievedPayloads.size() > 0)
+		String[] columnNames = new String[]{PayloadsTable.COLUMN_TYPE, PayloadsTable.COLUMN_BELONGS_TO_ME};
+		String[] searchTerms = new String[]{Payload.OBJECT_TYPE_MSG, "0"}; // Zero stands for false in the database
+		ArrayList<Payload> msgsToProcess = payProv.searchPayloads(columnNames, searchTerms);
+		
+		boolean msg0RetrievedAndDecrypted = false;
+		boolean msg1RetrievedAndDecrypted = false;
+		boolean msg2RetrievedAndDecrypted = false;
+		
+		if (msgsToProcess.size() > 0)
 		{
-			for (Payload p : retrievedPayloads)
+			for (Payload p : msgsToProcess)
 			{
-				if (p.belongsToMe() == false)
+				//Process each msg Payload that is found
+				IncomingMessageProcessor inMsgProc = new IncomingMessageProcessor();
+				Message decryptedMessage = inMsgProc.processReceivedMsg(p);
+				
+				if (decryptedMessage != null)
 				{
-					//Process each msg Payload that is found
-					IncomingMessageProcessor inMsgProc = new IncomingMessageProcessor();
-					Message decryptedMessage = inMsgProc.processReceivedMsg(p);
-					
 					// Check each decrypted Message
 					String messageSubject = decryptedMessage.getSubject();
 					String messageBody = decryptedMessage.getBody();			
 					Log.i(TAG, "Decrypted message subject: " + messageSubject);
 					Log.i(TAG, "Decrypted message body:    " + messageBody);
 					
-					assertTrue(messageSubject.equals(MESSAGE_0_SUBJECT) || messageSubject.equals(MESSAGE_1_SUBJECT) || messageSubject.equals(MESSAGE_2_SUBJECT));
-					assertTrue(messageBody.equals(MESSAGE_0_BODY) || messageBody.equals(MESSAGE_1_BODY) || messageBody.equals(MESSAGE_2_BODY));
+					if (messageSubject.equals(MESSAGE_0_SUBJECT) && messageBody.equals(MESSAGE_0_BODY))
+					{
+						msg0RetrievedAndDecrypted = true;
+					}
+					else if (messageSubject.equals(MESSAGE_1_SUBJECT) && messageBody.equals(MESSAGE_1_BODY))
+					{
+						msg1RetrievedAndDecrypted = true;
+					}
+					else if (messageSubject.equals(MESSAGE_2_SUBJECT) && messageBody.equals(MESSAGE_2_BODY))
+					{
+						msg2RetrievedAndDecrypted = true;
+					}
 					
 					// After the Payload has been processed, delete it from the database
 					payProv.deletePayload(p);
 				}
 			}
 		}
+		
+		// Check whether we managed to retrieve and decrypt the msgs
+		assertTrue(msg0RetrievedAndDecrypted);
+		assertTrue(msg1RetrievedAndDecrypted);
+		assertTrue(msg2RetrievedAndDecrypted);
 		
 		// Cleaning up - delete the addresses and pubkeys we created from the database
 		AddressProvider addProv = AddressProvider.get(App.getContext());

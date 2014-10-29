@@ -3,18 +3,15 @@ package org.bitseal.tests.network;
 import java.util.concurrent.TimeUnit;
 
 import org.bitseal.core.App;
-import org.bitseal.core.OutgoingMessageProcessor;
 import org.bitseal.core.PubkeyProcessor;
 import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.crypt.PubkeyGenerator;
 import org.bitseal.data.Address;
-import org.bitseal.data.Message;
 import org.bitseal.data.Payload;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
 import org.bitseal.database.PubkeyProvider;
 import org.bitseal.network.ServerCommunicator;
-import org.bitseal.util.ByteFormatter;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -22,7 +19,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 /** 
- * Tests the disseminateMsgWithPOW() method in the ServerCommunicator class.<br><br>
+ * Tests the disseminatePubkeyWithPOW() method in the ServerCommunicator class.<br><br>
  * 
  * Note: The use of AndroidTestCase is necessary in order to ensure that 
  * the application context will be available when the main body of the test 
@@ -30,11 +27,9 @@ import android.util.Log;
  * will often throw a null pointer exception if the app has only been running
  * for a very short time. 
 **/
-public class Test_DisseminateMsgWithPOW extends AndroidTestCase
+public class Test_DisseminatePubkey extends AndroidTestCase
 {
-	private static final long TEST_MSG_TIME_TO_LIVE = 600;
-	
-	private static final String TAG = "TEST_DISSEMINATE_MSG_WITH_POW";
+	private static final String TAG = "TEST_DISSEMINATE_PUBKEY";
 	
 	protected void setUp() throws Exception
 	{
@@ -68,59 +63,41 @@ public class Test_DisseminateMsgWithPOW extends AndroidTestCase
         }
 	}
 	
-	public void testDisseminateMsgWithPOW()
+	public void testDisseminatePubkey()
 	{
 		// Wait for five seconds in order to make it more likely that we will be able to get application context
 		SystemClock.sleep(5000);
-		
-		// Start the test with a String representing a Bitmessage address. For 'real world' testing,
-		// this should be an address owned by a real Bitmessage node that is active on the network.
-		String testAddress = "BM-2cVMnheVsC4oMzqmTV5xXfRYworaBnoJn7";
-		
-		// Generate a new Address object, which will be the 'from' addresses of the message
+				
+		// Generate a new Address object
 		AddressGenerator addGen = new AddressGenerator();
-		Address fromAddress = addGen.generateAndSaveNewAddress();
+		Address address = addGen.generateAndSaveNewAddress();
 		
-		// Generate a Pubkey for the 'from' address. This will be used during the message sending process
+		// Generate a Pubkey for the new address. This will be the pubkey that we disseminate
 		PubkeyGenerator pubGen = new PubkeyGenerator();
-		Pubkey fromPubkey = pubGen.generateAndSaveNewPubkey(fromAddress);
+		Pubkey pubkey = pubGen.generateAndSaveNewPubkey(address);
 		
-		// Retrieve the pubkey for the 'to' Address (this will automatically save it to the database)
+		// Process the generated pubkey, giving a payload in byte[] form that is ready to be sent over the network
 		PubkeyProcessor pubProc = new PubkeyProcessor();
-		Pubkey toPubkey = pubProc.retrievePubkeyByAddressString(testAddress);
-		
-		// Create a new Message object, as if it had been written by the user through the UI
-		Message message = new Message();
-		message.setBelongsToMe(true);
-		message.setToAddress(testAddress);
-		message.setFromAddress(fromAddress.getAddress());
-		message.setSubject("Sent from.....YKW");
-		message.setBody("As they say, 'Sent from my Android phone' :)");
-		
-		// Take the message and process it, giving a msg that is ready to be sent over the network
-		OutgoingMessageProcessor outMsgProc = new OutgoingMessageProcessor();
-		Payload msgPayload = outMsgProc.processOutgoingMessage(message, toPubkey, true, TEST_MSG_TIME_TO_LIVE);
-		Log.i(TAG, "msg to be sent over the network: " + ByteFormatter.byteArrayToHexString(msgPayload.getPayload()));
-		
-		// Disseminate the message payload to the rest of the network via a PyBitmessage server
+		Payload pubkeyPayload = pubProc.constructPubkeyPayload(pubkey, true);
+				
+		// Disseminate the pubkey payload to the rest of the network via a PyBitmessage server
 		ServerCommunicator servCom = new ServerCommunicator();
-		boolean disseminationSuccessful = servCom.disseminateMsg(msgPayload.getPayload());
+		boolean disseminationSuccessful = servCom.disseminatePubkey(pubkeyPayload.getPayload());
 		
 		if (disseminationSuccessful == true)
 		{
-			Log.i(TAG, "The message was successfully sent to a server!");
+			Log.i(TAG, "The pubkey was successfully sent to a server!");
 		}
 		else
 		{
-			Log.e(TAG, "The attempt to disseminate the message failed!");
+			Log.e(TAG, "The attempt to disseminate the pubkey failed!");
 		}
 		assertTrue(disseminationSuccessful);
 		
-		// Cleaning up - delete the addresses and pubkeys we created from the database
+		// Cleaning up - delete the address and pubkey we created from the database
 		AddressProvider addProv = AddressProvider.get(App.getContext());
-		addProv.deleteAddress(fromAddress);
+		addProv.deleteAddress(address);
 		PubkeyProvider pubProv = PubkeyProvider.get(App.getContext());
-		pubProv.deletePubkey(toPubkey);
-		pubProv.deletePubkey(fromPubkey);
+		pubProv.deletePubkey(pubkey);
 	}
 }

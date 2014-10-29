@@ -1,16 +1,14 @@
 package org.bitseal.tests.network;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import org.bitseal.core.App;
-import org.bitseal.core.PubkeyProcessor;
+import org.bitseal.core.OutgoingGetpubkeyProcessor;
 import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.data.Address;
 import org.bitseal.data.Payload;
 import org.bitseal.database.AddressProvider;
-import org.bitseal.network.ServerCommunicator;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -26,11 +24,13 @@ import android.util.Log;
  * will often throw a null pointer exception if the app has only been running
  * for a very short time. 
  * 
- * Note: This test uses reflection to access one or more private methods
+ * @author Jonathan Coe
 **/
-public class Test_DisseminateGetpubkeyWithPOW extends AndroidTestCase
+public class Test_DisseminateGetpubkey extends AndroidTestCase
 {
-	private static final String TAG = "TEST_DISSEMINATE_GETPUBKEY_WITH_POW";
+	private static final long GETPUBKEY_TIME_TO_LIVE = 3600; // In seconds, so currently equal to 1 hour
+	
+	private static final String TAG = "TEST_DISSEMINATE_GETPUBKEY";
 	
 	protected void setUp() throws Exception
 	{
@@ -64,7 +64,7 @@ public class Test_DisseminateGetpubkeyWithPOW extends AndroidTestCase
         }
 	}
 	
-	public void testDisseminateGetpubkeyWithPOW() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public void testDisseminateGetpubkey() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
 	{
 		// Wait for five seconds in order to make it more likely that we will be able to get application context
 		SystemClock.sleep(5000);
@@ -73,18 +73,12 @@ public class Test_DisseminateGetpubkeyWithPOW extends AndroidTestCase
 		AddressGenerator addGen = new AddressGenerator();
 		Address testAddress = addGen.generateAndSaveNewAddress();
 		
-		// Construct a getpubkey payload for the new address, using reflection to access the private method
-		PubkeyProcessor pubProc = new PubkeyProcessor();
-		Method method1 = PubkeyProcessor.class.getDeclaredMethod("constructGetpubkeyPayload", String.class);
-		method1.setAccessible(true);
-		Payload getpubkeyPayload = (Payload) method1.invoke(pubProc, testAddress.getAddress());
-		byte[] payloadBytes = getpubkeyPayload.getPayload();
-				
-		// Disseminate the pubkey payload to the rest of the network via a PyBitmessage server
-		ServerCommunicator servCom = new ServerCommunicator();
-		boolean disseminationSuccessful = servCom.disseminateGetpubkey(payloadBytes);
+		// Disseminate the pubkey payload to the rest of the network via a Bitseal
+		OutgoingGetpubkeyProcessor outProc = new OutgoingGetpubkeyProcessor();
+		Payload getpubkeyPayload = outProc.constructAndDisseminateGetpubkeyRequst(testAddress.getAddress(), GETPUBKEY_TIME_TO_LIVE);
 		
-		if (disseminationSuccessful == true)
+		// If the getpubkey payload is disseminated successfully, its time value will be set to the current time. Otherwise it will be zero. 
+		if (getpubkeyPayload.getTime() > 0)
 		{
 			Log.i(TAG, "The getpubkey was successfully sent to a server!");
 		}
@@ -92,7 +86,7 @@ public class Test_DisseminateGetpubkeyWithPOW extends AndroidTestCase
 		{
 			Log.e(TAG, "The attempt to disseminate the getpubkey failed!");
 		}
-		assertTrue(disseminationSuccessful);
+		assertTrue(getpubkeyPayload.getTime() > 0);
 		
 		// Cleaning up - delete the address we created from the database
 		AddressProvider addProv = AddressProvider.get(App.getContext());
