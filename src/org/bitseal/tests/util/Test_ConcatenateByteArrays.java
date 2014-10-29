@@ -16,11 +16,11 @@ import android.util.Log;
  * 
  * @author Jonathan Coe
  */
-public class Test_ByteUtils extends TestCase
+public class Test_ConcatenateByteArrays extends TestCase
 {
 	SecureRandom secRand;
 	
-	private static final String TAG = "TEST_BYTE_UTILS";
+	private static final String TAG = "TEST_CONCATENATE_BYTE_ARRAYS";
 	
 	protected void setUp() throws Exception
 	{

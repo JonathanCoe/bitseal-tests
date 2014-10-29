@@ -34,7 +34,7 @@ import org.bitseal.tests.database.Test_PubkeyProvider;
 import org.bitseal.tests.database.Test_QueueRecordProvider;
 import org.bitseal.tests.database.Test_ServerRecordProvider;
 import org.bitseal.tests.services.Test_SortQueueRecords;
-import org.bitseal.tests.util.Test_ByteUtils;
+import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_ColourCalculator;
 import org.bitseal.tests.util.Test_RemoveBytesFromArray;
 import org.bitseal.tests.util.Test_TimeUtils;
@@ -96,7 +96,7 @@ public class Test_RunQuickTests
 		suite.addTestSuite(Test_SortQueueRecords.class);
 		
 		// Tests from "util" package
-		suite.addTestSuite(Test_ByteUtils.class);
+		suite.addTestSuite(Test_ConcatenateByteArrays.class);
 		suite.addTestSuite(Test_ColourCalculator.class);
 		suite.addTestSuite(Test_RemoveBytesFromArray.class);
 		suite.addTestSuite(Test_TimeUtils.class);

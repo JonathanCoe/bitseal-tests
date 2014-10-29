@@ -42,7 +42,7 @@ import org.bitseal.tests.network.Test_RequestMessagesFromServer;
 import org.bitseal.tests.network.Test_RequestPubkeyFromServer;
 import org.bitseal.tests.pow.Test_CalculateAndVerifyPOW;
 import org.bitseal.tests.services.Test_SortQueueRecords;
-import org.bitseal.tests.util.Test_ByteUtils;
+import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_ColourCalculator;
 import org.bitseal.tests.util.Test_RemoveBytesFromArray;
 import org.bitseal.tests.util.Test_TimeUtils;
@@ -116,7 +116,7 @@ public class Test_RunAllTests
 		suite.addTestSuite(Test_SortQueueRecords.class);
 		
 		// Tests from "util" package
-		suite.addTestSuite(Test_ByteUtils.class);
+		suite.addTestSuite(Test_ConcatenateByteArrays.class);
 		suite.addTestSuite(Test_ColourCalculator.class);
 		suite.addTestSuite(Test_RemoveBytesFromArray.class);
 		suite.addTestSuite(Test_TimeUtils.class);
