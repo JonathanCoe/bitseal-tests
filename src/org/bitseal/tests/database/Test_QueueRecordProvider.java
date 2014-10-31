@@ -86,8 +86,11 @@ public class Test_QueueRecordProvider extends AndroidTestCase
 		record1.setAttempts(1);
 		record1.setObject0Id(2821);
 		record1.setObject0Type("EncryptedMsg");
+		record1.setObject1Id(2345);
+		record1.setObject1Type("Pubkey");
+		record1.setObject2Id(45);
+		record1.setObject2Type("Message");
 
-		
 		QueueRecord record2 = new QueueRecord(); // Deliberate duplicate for testing - see below
 		record2.setTask("SendMsg");
 		record2.setTriggerTime((System.currentTimeMillis() / 1000) + 3600);
@@ -98,6 +101,8 @@ public class Test_QueueRecordProvider extends AndroidTestCase
 		record2.setObject0Type("EncryptedMsg");
 		record2.setObject1Id(2345);
 		record2.setObject1Type("Pubkey");
+		record2.setObject2Id(45);
+		record2.setObject2Type("Message");
 		
 		provider.addQueueRecord(record0);
 		provider.addQueueRecord(record1);
