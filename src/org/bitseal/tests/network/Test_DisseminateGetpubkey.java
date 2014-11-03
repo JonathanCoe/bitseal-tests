@@ -7,6 +7,7 @@ import org.bitseal.core.App;
 import org.bitseal.core.OutgoingGetpubkeyProcessor;
 import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.data.Address;
+import org.bitseal.data.Message;
 import org.bitseal.data.Payload;
 import org.bitseal.database.AddressProvider;
 
@@ -73,9 +74,13 @@ public class Test_DisseminateGetpubkey extends AndroidTestCase
 		AddressGenerator addGen = new AddressGenerator();
 		Address testAddress = addGen.generateAndSaveNewAddress();
 		
+		// Generate a new Message object for the getpubkey request
+		Message message = new Message();
+		message.setToAddress(testAddress.getAddress());
+		
 		// Disseminate the pubkey payload to the rest of the network via a Bitseal
 		OutgoingGetpubkeyProcessor outProc = new OutgoingGetpubkeyProcessor();
-		Payload getpubkeyPayload = outProc.constructAndDisseminateGetpubkeyRequst(testAddress.getAddress(), GETPUBKEY_TIME_TO_LIVE);
+		Payload getpubkeyPayload = outProc.constructAndDisseminateGetpubkeyRequst(message, GETPUBKEY_TIME_TO_LIVE);
 		
 		// If the getpubkey payload is disseminated successfully, its time value will be set to the current time. Otherwise it will be zero. 
 		if (getpubkeyPayload.getTime() > 0)
