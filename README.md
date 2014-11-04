@@ -5,8 +5,10 @@ Bitseal is a Bitmessage client for Android, currently in Beta.
 
 This repository contains the tests for Bitseal.  
 
-**See Bitseal's main respository: [https://github.com/JonathanCoe/bitseal](https://github.com/JonathanCoe/bitseal)**
+<img src=https://i.imgur.com/3DxSCJY.png" align="left" height="503" width="800" hspace="5" vspace="20">
 
+---------------
+**See also Bitseal's main respository: [https://github.com/JonathanCoe/bitseal](https://github.com/JonathanCoe/bitseal)**
 
 License
 ---------------
