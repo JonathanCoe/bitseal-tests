@@ -15,7 +15,7 @@ import org.bitseal.crypt.PubkeyGenerator;
 import org.bitseal.crypt.SHA512;
 import org.bitseal.data.Address;
 import org.bitseal.data.Message;
-import org.bitseal.data.Object;
+import org.bitseal.data.BMObject;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
 import org.bitseal.database.PubkeyProvider;
@@ -118,7 +118,7 @@ public class Test_ConstructAckPayload extends TestCase
 		
 		// Parse the standard Bitmessage object data
 		byte[] ackObjectBytes = ArrayCopier.copyOfRange(fullAckMsg, readPosition, fullAckMsg.length);
-		Object ackObject = new ObjectProcessor().parseObject(ackObjectBytes);
+		BMObject ackObject = new ObjectProcessor().parseObject(ackObjectBytes);
 		
 		// Check the ackData
 		byte[] ackData = ackObject.getPayload();

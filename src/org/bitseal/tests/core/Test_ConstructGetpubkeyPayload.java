@@ -12,7 +12,7 @@ import org.bitseal.core.ObjectProcessor;
 import org.bitseal.core.OutgoingGetpubkeyProcessor;
 import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.data.Address;
-import org.bitseal.data.Object;
+import org.bitseal.data.BMObject;
 import org.bitseal.data.Payload;
 import org.bitseal.database.AddressProvider;
 import org.bitseal.util.ByteFormatter;
@@ -58,7 +58,7 @@ public class Test_ConstructGetpubkeyPayload extends TestCase
 		Log.i(TAG, "getpubkey payload bytes in hex:    " + ByteFormatter.byteArrayToHexString(payloadBytes));
 		
 		// Parse the standard Bitmessage object data
-		Object getpubkeyObject = new ObjectProcessor().parseObject(payloadBytes);
+		BMObject getpubkeyObject = new ObjectProcessor().parseObject(payloadBytes);
 		
 		byte[] identifier = getpubkeyObject.getPayload(); // Either the ripe hash or the 'tag'
 		Log.i(TAG, "getpubkey payload identifier:      " + ByteFormatter.byteArrayToHexString(identifier));

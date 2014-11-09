@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.bitseal.crypt.CryptProcessor;
 import org.bitseal.crypt.KeyConverter;
 import org.bitseal.data.Address;
-import org.bitseal.data.Object;
+import org.bitseal.data.BMObject;
 import org.bitseal.util.ByteFormatter;
 import org.bitseal.util.ByteUtils;
 import org.spongycastle.jce.interfaces.ECPrivateKey;
@@ -106,7 +106,7 @@ public class Test_DecryptionSpecific extends TestCase
 		toAddress.setPrivateEncryptionKey(new KeyConverter().encodePrivateKeyToWIF(privateKeykBytes));
 		
 		// Use the example data to construct a new EncryptedMsg object
-		Object encMsg = new Object();
+		BMObject encMsg = new BMObject();
 		encMsg.setPayload(encryptedMsgData);
 		
 		// Create the ECPrivateKey object that we will use to decrypt the message data
