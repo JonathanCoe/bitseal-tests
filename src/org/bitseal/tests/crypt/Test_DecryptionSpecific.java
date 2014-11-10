@@ -79,7 +79,7 @@ public class Test_DecryptionSpecific extends TestCase
 //			Plain text - "The quick brown fox jumps over the lazy dog."
 		String expectedPlainText = "54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f672e";
 		
-		// Combine the starting data into a sinlge byte[]. This will be the encrypted message data that we decrypt.
+		// Combine the starting data into a single byte[]. This will be the encrypted message data that we decrypt.
 		byte[] encryptedMsgData = null;
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try 
