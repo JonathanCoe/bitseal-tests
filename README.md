@@ -1,7 +1,7 @@
 Bitseal-Tests
 =============
 
-Bitseal is a Bitmessage client for Android, currently in Beta. 
+Bitseal is a [Bitmessage](https://bitmessage.org) client for Android, currently in Beta. 
 
 This repository contains the tests for Bitseal.  
 
