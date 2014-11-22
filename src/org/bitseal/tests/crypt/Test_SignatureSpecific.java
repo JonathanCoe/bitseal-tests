@@ -41,19 +41,19 @@ public class Test_SignatureSpecific extends TestCase
 		// Address that this starting data derives from: BM-2cW7h5aUmvJC9WApzfWsXDcMCSqjPYWbLG
 		
 		// Starting data:
-		String inputPrivateSigningKey = "5JNWmdv1jovwpeMer3sYX6mtJ1S4WeFqDkvLBW24RQbko966WZr";
-		long inputTime = 1416396813;
+		String inputPrivateSigningKey = "5HynQJefWMVXbkft2RB9tkLJ3EWk4UgsbFg1CAsNN5DEHtw9tTR";
+		long inputTime = 1419079365;
 		int inputAddressVersion = 4;
 		int inputStreamNumber = 1;
 		int inputBehaviourBitfield = 1;
-		String inputPublicSigningKeyHex = "3f957a60845d1288bc1c06b10e8b1bd1425d4beb6ff612bd4521870d43c2e568462f77a004f5d33a8d9a4e0de5500f855b3a9ecf9ac5f418bc6d5ab25d8bb072";
-		String inputPublicEncryptionKeyHex = "11475ba16bd378e7f1d4bbb37ed3afb7d5ac8a21737705e469636cb587b2859f30300d1b9f4f0d25373a87d0bfb072d81f81ca6e0a92a6b348789ada3aa64d3e";
-		String inputRipeHash = "a5589e1196c5c1d9cd502272e8cc3b3c9de26a";
+		String inputPublicSigningKeyHex = "04eac9804fced9771b5b43135de14a5290a8b5628770358eb51e881d2a9ad8d77cc2e63eafb7ac6073866838b42663f8e8eabccafa42a1c039d1141ffbf365d7b5";
+		String inputPublicEncryptionKeyHex = "0466b2ee6c326235f0eedca14f3a4203c8a2698a8d571191ecb1ae49847f270e9b7729c5a790b5ce049be7bf5190f5c67ec62a61e9d035e75ed5edc42e2f8d75ab";
+		String inputRipeHash = "00988701cbf9866f45096aa1b8487118eece2015";
 		int inputNonceTrialsPerByte = 1000;
 		int inputExtraBytes = 1000;
 		
 		// PyBitmessage signature
-		String pybitmessageSignatureHex = "304502203660cdca5470961956a8f273fab809399834a95bc2dfae4c414de8f75f1d7972022100dc6642727b9bbd75d83ae3f6812bb55981076a5ccf858051e989ce7bacb52762";
+		String pybitmessageSignatureHex = "3046022100a8a4e6aeed2e41560ed87cb867c7386fb967dc992f11d4009c1d21d8f8f244c0022100d17cb6f5d830e273b251572c73474f6e7742c5a1e782769abff8d021454c0877";
 		
 		// First convert the public signing key, public encryption key, and PyBitmessage signature from hex to byte[] form
 		byte[] publicSigningKey = ByteFormatter.hexStringToByteArray(inputPublicSigningKeyHex);
