@@ -61,7 +61,7 @@ public class Test_DecryptionSpecific extends TestCase
 		int yLength = 32;
 		String yString = "df94686c6afb565ac6149b153d61b3b287ee2c7f997c14238796c12b43a3865a";
 		String cipherTextString = "64203d5b24688e2547bba345fa139a5a1d962220d4d48a0cf3b1572c0d95b61643a6f9a0d75af7eacc1bd957147bf723";
-		String macString = "4c08ac6c93c7377bac5a2e873dd3511b127aff6d0d1638cdae4989c4d2fe7de1";
+		String macString = "f2526d61b4851fb23409863826fd206165edc021368c7946571cead69046e619";
 		String privateKeykString = "02ba2744e65ccd7b1954b0a33b80d75e16cab47f2b331ff0b6d184b71983da85";
 		
 		// Convert the starting data to byte[] form
