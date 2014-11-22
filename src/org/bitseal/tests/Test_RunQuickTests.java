@@ -42,7 +42,7 @@ import org.bitseal.tests.util.Test_VarintEncoding;
 
 /**
  * Runs through all the unit tests that do not depend on POW or
- *  a network connection and can therefore be completed quickly. <br><br>
+ * a network connection and can therefore be completed quickly. <br><br>
  * 
  * NOTE: To make this set of tests run quickly:<br>
  * 	1) Use the 'fake POW' code in POWProcessor. This sets the POW nonce as a random value.<br>
