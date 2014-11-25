@@ -13,7 +13,6 @@ import android.util.Log;
  * Tests the method ByteUtils.removeBytesFromArray()
  * 
  * @author Jonathan Coe
- *
  */
 public class Test_RemoveBytesFromArray extends TestCase
 {
