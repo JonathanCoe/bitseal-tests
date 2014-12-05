@@ -8,12 +8,14 @@ import junit.framework.TestCase;
 import org.bitseal.crypt.CryptProcessor;
 import org.bitseal.crypt.KeyConverter;
 import org.bitseal.crypt.SHA256;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.ByteFormatter;
 import org.spongycastle.jce.interfaces.ECPrivateKey;
 import org.spongycastle.jce.interfaces.ECPublicKey;
 import org.spongycastle.math.ec.ECPoint;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -32,6 +34,10 @@ public class Test_EncryptionSpecific extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

@@ -11,6 +11,7 @@ import org.bitseal.data.Address;
 import org.bitseal.data.Payload;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 
 import android.content.Context;
@@ -34,6 +35,10 @@ public class Test_ConstructPubkeyPayload extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.bitseal.core.AddressProcessor;
 import org.bitseal.core.PubkeyProcessor;
 import org.bitseal.data.Pubkey;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.network.ServerCommunicator;
 
 import android.content.Context;
@@ -33,6 +34,10 @@ public class Test_RequestPubkeyFromServer extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

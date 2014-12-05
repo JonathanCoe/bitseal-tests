@@ -10,10 +10,12 @@ import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.crypt.SHA512;
 import org.bitseal.data.Address;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.Base58;
 import org.bitseal.util.ByteFormatter;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /** 
@@ -29,6 +31,10 @@ public class Test_GenerateAddress extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

@@ -15,8 +15,10 @@ import org.bitseal.data.Address;
 import org.bitseal.data.BMObject;
 import org.bitseal.data.Payload;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.util.ByteFormatter;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /** 
@@ -35,6 +37,10 @@ public class Test_ConstructGetpubkeyPayload extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

@@ -51,6 +51,10 @@ public class Test_ConstructAckPayload extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception
@@ -59,11 +63,7 @@ public class Test_ConstructAckPayload extends TestCase
 	}
 	
 	public void testConstructAckPayload() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
-	{	
-		// Initialize the database
-		DatabaseContentProvider.openDatabase();
-		SystemClock.sleep(10000); // We have to allow some time for the database to be opened
-		
+	{
 		// Generate a new address
 		AddressGenerator addGen = new AddressGenerator();
 		Address toAddress = addGen.generateAndSaveNewAddress();

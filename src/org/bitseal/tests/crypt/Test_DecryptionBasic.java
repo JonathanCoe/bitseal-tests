@@ -15,9 +15,11 @@ import org.bitseal.data.Message;
 import org.bitseal.data.Payload;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 import org.bitseal.util.ByteFormatter;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -35,6 +37,10 @@ public class Test_DecryptionBasic extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception
@@ -43,7 +49,7 @@ public class Test_DecryptionBasic extends TestCase
 	}
 	
 	public void testDecryptionBasic()
-	{		
+	{
 		// Generate a 'to' address and a 'from' address
 		AddressGenerator addGen = new AddressGenerator();
 		Address toAddress = addGen.generateAndSaveNewAddress();

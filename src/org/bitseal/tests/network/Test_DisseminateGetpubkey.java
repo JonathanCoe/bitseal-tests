@@ -10,6 +10,7 @@ import org.bitseal.data.Address;
 import org.bitseal.data.Message;
 import org.bitseal.data.Payload;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -36,6 +37,10 @@ public class Test_DisseminateGetpubkey extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

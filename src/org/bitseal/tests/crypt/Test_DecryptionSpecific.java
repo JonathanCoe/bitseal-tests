@@ -9,10 +9,12 @@ import org.bitseal.crypt.CryptProcessor;
 import org.bitseal.crypt.KeyConverter;
 import org.bitseal.data.Address;
 import org.bitseal.data.BMObject;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.util.ByteFormatter;
 import org.bitseal.util.ByteUtils;
 import org.spongycastle.jce.interfaces.ECPrivateKey;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -33,6 +35,10 @@ public class Test_DecryptionSpecific extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

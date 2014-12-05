@@ -3,11 +3,14 @@ package org.bitseal.tests.database;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
 import org.bitseal.crypt.ECKeyPair;
 import org.bitseal.data.Pubkey;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 import org.bitseal.database.PubkeysTable;
 import org.bitseal.util.ByteUtils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.SystemClock;
@@ -33,6 +36,10 @@ public class Test_PubkeyProvider extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

@@ -14,6 +14,7 @@ import org.bitseal.data.Message;
 import org.bitseal.data.Pubkey;
 import org.bitseal.data.UnencryptedMsg;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 
 import android.content.Context;
@@ -43,6 +44,10 @@ public class Test_ExtractMessageFromUnencryptedMsg extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception
@@ -74,7 +79,7 @@ public class Test_ExtractMessageFromUnencryptedMsg extends AndroidTestCase
 	 }
 	
 	public void testExtractMessageFromUnencryptedMsg() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
+	{				
 		// Test 0: Construct a new Message, then use it to construct a new UnencryptedMsg, then use that to create a new 
 		// Message and check whether all the data has been converted properly
 		AddressGenerator addGen = new AddressGenerator();

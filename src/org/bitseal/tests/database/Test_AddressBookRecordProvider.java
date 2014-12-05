@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.bitseal.data.AddressBookRecord;
 import org.bitseal.database.AddressBookRecordProvider;
 import org.bitseal.database.AddressBookRecordsTable;
+import org.bitseal.database.DatabaseContentProvider;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -30,6 +31,10 @@ public class Test_AddressBookRecordProvider extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

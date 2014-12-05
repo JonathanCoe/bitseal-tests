@@ -3,6 +3,7 @@ package org.bitseal.tests.network;
 import java.util.concurrent.TimeUnit;
 
 import org.bitseal.core.App;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.ServerRecordProvider;
 import org.bitseal.network.ApiCaller;
 
@@ -30,6 +31,10 @@ public class Test_ConnectToServer extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

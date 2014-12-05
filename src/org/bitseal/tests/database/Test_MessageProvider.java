@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.bitseal.data.Message;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.MessageProvider;
 import org.bitseal.database.MessagesTable;
 
@@ -30,6 +31,10 @@ public class Test_MessageProvider extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception

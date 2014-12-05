@@ -9,6 +9,7 @@ import org.bitseal.crypt.PubkeyGenerator;
 import org.bitseal.data.Address;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 
 import android.content.Context;
@@ -31,6 +32,10 @@ public class Test_RetrievePubkeyByAddressString extends AndroidTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		
+		// Open the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(5000); // We have to allow some extra time for the database to be opened
 	}
 
 	protected void tearDown() throws Exception
@@ -62,7 +67,7 @@ public class Test_RetrievePubkeyByAddressString extends AndroidTestCase
 	 }
 	
 	public void testRetrievePubkeyByAddressString()
-	{		
+	{
 		// Test 0: Generate a new address and its corresponding pubkey, then use the ripe hash to search for that pubkey
 		AddressGenerator addGen = new AddressGenerator();
 		Address address0 = addGen.generateAndSaveNewAddress();
