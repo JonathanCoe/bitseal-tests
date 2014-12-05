@@ -34,8 +34,8 @@ import org.bitseal.tests.database.Test_PubkeyProvider;
 import org.bitseal.tests.database.Test_QueueRecordProvider;
 import org.bitseal.tests.database.Test_ServerRecordProvider;
 import org.bitseal.tests.services.Test_SortQueueRecords;
-import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_ColourCalculator;
+import org.bitseal.tests.util.Test_ConcatenateByteArrays;
 import org.bitseal.tests.util.Test_RemoveBytesFromArray;
 import org.bitseal.tests.util.Test_TimeUtils;
 import org.bitseal.tests.util.Test_VarintEncoding;
@@ -53,7 +53,7 @@ import org.bitseal.tests.util.Test_VarintEncoding;
 public class Test_RunQuickTests
 {
 	public static Test suite()
-	{
+	{		
 		TestSuite suite = new TestSuite(Test_RunQuickTests.class.getName());
 		
 		// Tests from "core" package:

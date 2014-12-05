@@ -14,15 +14,17 @@ import org.bitseal.crypt.AddressGenerator;
 import org.bitseal.crypt.PubkeyGenerator;
 import org.bitseal.crypt.SHA512;
 import org.bitseal.data.Address;
-import org.bitseal.data.Message;
 import org.bitseal.data.BMObject;
+import org.bitseal.data.Message;
 import org.bitseal.data.Pubkey;
 import org.bitseal.database.AddressProvider;
+import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.database.PubkeyProvider;
 import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.ByteFormatter;
 import org.bitseal.util.ByteUtils;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /** 
@@ -57,7 +59,11 @@ public class Test_ConstructAckPayload extends TestCase
 	}
 	
 	public void testConstructAckPayload() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
-	{
+	{	
+		// Initialize the database
+		DatabaseContentProvider.openDatabase();
+		SystemClock.sleep(10000); // We have to allow some time for the database to be opened
+		
 		// Generate a new address
 		AddressGenerator addGen = new AddressGenerator();
 		Address toAddress = addGen.generateAndSaveNewAddress();
