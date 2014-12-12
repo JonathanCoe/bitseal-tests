@@ -11,6 +11,7 @@ import org.bitseal.crypt.SHA256;
 import org.bitseal.database.DatabaseContentProvider;
 import org.bitseal.util.ArrayCopier;
 import org.bitseal.util.ByteFormatter;
+import org.bitseal.util.ByteUtils;
 import org.spongycastle.jce.interfaces.ECPrivateKey;
 import org.spongycastle.jce.interfaces.ECPublicKey;
 import org.spongycastle.math.ec.ECPoint;
@@ -22,6 +23,9 @@ import android.util.Log;
  * A test that attempts to replicate the results of the encryption example here: <br><br>
  * 
  * https://bitmessage.org/wiki/Encryption#Example<br><br>
+ * 
+ * Note: Since the original example was posted, the data used to calculate the MAC has changed. 
+ * It used to be calculated from the ciphertext alone. Now it is calculated from IV + R + ciphertext. <br><br>
  * 
  * Note: This test uses reflection to access one or more private methods
  * 
@@ -92,7 +96,7 @@ public class Test_EncryptionSpecific extends TestCase
 		String expectedKeyEString = "170543828267867105263d4828efff82d9d59cbf08743b696bcc5d69fa1897b4";
 		String expectedKeyMString = "f83f1e9cc5d6b8448d39dc6a9d5f5b7f460e4a78e9286ee8d91ce1660a53eacd";
 		String expectedCipherTextString = "64203d5b24688e2547bba345fa139a5a1d962220d4d48a0cf3b1572c0d95b61643a6f9a0d75af7eacc1bd957147bf723";
-		String expectedMacString = "4c08ac6c93c7377bac5a2e873dd3511b127aff6d0d1638cdae4989c4d2fe7de1";
+		String expectedMacString = "d961859a9bc3065a25a7f41e840c57626da9532ce153f91d43c17f32ec4ad1b2";
 		
 		Log.i(TAG, "Length of expectedPubKeyPXString: " + expectedPubKeyPXString.length());
 		Log.i(TAG, "Length of expectedPubKeyPYString: " + expectedPubKeyPYString.length());
@@ -142,8 +146,9 @@ public class Test_EncryptionSpecific extends TestCase
 		method1.setAccessible(true);
 		byte[] cipherText = (byte[]) method1.invoke(cryptProc, enc_key, ivBytes, plainTextBytes, true);
 		
-		// 5) Calculate a 32 byte MAC with HMACSHA256, using key_m as salt and encrypted payload as data. Call the output MAC.
-		byte[] mac = SHA256.hmacSHA256(cipherText, mac_key);
+		// 5) Calculate a 32 byte MAC with HMACSHA256, using key_m as salt and IV + R + Cipher text as data. Call the output MAC.
+		byte[] dataForMac = ByteUtils.concatenateByteArrays(ivBytes, pubKeyRBytes, cipherText);
+		byte[] mac = SHA256.hmacSHA256(dataForMac, mac_key);
 		
 		
 		
