@@ -46,7 +46,7 @@ import org.bitseal.tests.util.Test_VarintEncoding;
  * 
  * NOTE: To make this set of tests run quickly:<br>
  * 	1) Use the 'fake POW' code in POWProcessor. This sets the POW nonce as a random value.<br>
- *  2) Disable the POW check in ObjectProcessor.parseObject()
+ *  2) Disable the POW check and time check in ObjectProcessor.parseObject()
  * 
  * @author Jonathan Coe
  */
